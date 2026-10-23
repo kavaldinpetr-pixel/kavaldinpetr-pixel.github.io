@@ -1,0 +1,17 @@
+{
+  "name": "ostrov-proektov",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Портфолио Петра Кавалдина: сайт и 3D-игра «Остров проектов»",
+  "scripts": {
+    "build": "node tools/build-game.cjs && node tools/build-site.cjs",
+    "build:game": "node tools/build-game.cjs",
+    "build:site": "node tools/build-site.cjs",
+    "dev": "node tools/build-game.cjs --dev game-dev.html"
+  },
+  "devDependencies": {
+    "cannon-es": "0.20.0",
+    "esbuild": "0.28.2",
+    "three": "0.186.1"
+  }
+}

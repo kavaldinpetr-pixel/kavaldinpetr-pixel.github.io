@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Персональная ссылка</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400..700&family=Sofia+Sans+Extra+Condensed:wght@700..900&display=swap">
+<style>
+/* Служебная страница для рассылки. Тот же мир, что и у портфолио: тёмный космос, розовый — только для действий. */
+:root{
+  --paper:#060912;
+  --surface:#0E1322;
+  --canvas:#18203A;
+  --ink:#EEF1F7;
+  --ink-2:#98A2B8;
+  --rule:#252D44;
+  --mark:#FF4FA0;
+  --on-mark:#0A0D16;
+  --mark-wash:rgba(255,79,160,.14);
+  --ok:#5BE3C8;
+  color-scheme:dark;
+  --font-display:"Sofia Sans Extra Condensed","Roboto Condensed","Arial Narrow",sans-serif;
+  --font-text:"Onest","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;min-height:100vh;background:var(--paper);background-image:radial-gradient(1200px 600px at 85% -10%,rgba(255,79,160,.12),transparent 60%),radial-gradient(900px 500px at -10% 110%,rgba(127,183,255,.08),transparent 60%);color:var(--ink);font:16px/1.5 var(--font-text);-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-right)) 56px max(16px,env(safe-area-inset-left))}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.back{display:inline-flex;align-items:center;gap:8px;color:var(--ink-2);text-decoration:none;font-size:15px}
+.back:hover{color:var(--ink)}
+h1{margin:22px 0 10px;font:900 clamp(44px,8vw,68px)/.92 var(--font-display);letter-spacing:.005em;text-transform:uppercase}
+.lead{margin:0 0 26px;max-width:36em;color:var(--ink-2);font-size:17px}
+.lead b{color:var(--ink);font-weight:600}
+
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:16px;padding:22px}
+.card + .card{margin-top:14px}
+.field + .field{margin-top:20px}
+.lbl{display:block;margin-bottom:8px;font-weight:600;font-size:15px}
+.hint{margin:7px 0 0;color:var(--ink-2);font-size:14px}
+input[type=text],input[type=url],textarea{width:100%;padding:13px 14px;border:1px solid var(--rule);border-radius:10px;background:var(--canvas);color:var(--ink);font:inherit;font-size:16px}
+input::placeholder,textarea::placeholder{color:#6B7590}
+input:focus,textarea:focus{outline:none;border-color:var(--ink)}
+textarea{min-height:150px;resize:vertical;line-height:1.5}
+
+.seg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding:4px;margin:0;border:1px solid var(--rule);border-radius:12px;background:var(--canvas)}
+.seg--2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.seg legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.seg label{position:relative;display:flex;align-items:center;justify-content:center;min-height:44px;padding:8px 10px;border-radius:9px;text-align:center;font-size:15px;line-height:1.2;color:var(--ink-2);cursor:pointer;transition:background .15s,color .15s}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label:hover{color:var(--ink)}
+.seg label:has(input:checked){background:var(--ink);color:var(--paper);font-weight:600}
+.seg label:has(input:focus-visible){outline:2px solid var(--ink);outline-offset:2px}
+@media (max-width:560px){.seg{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.out-k{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:10px}
+.out-k .lbl{margin:0}
+.link{display:block;padding:14px;border-radius:10px;background:var(--canvas);border:1px solid var(--rule);font:500 15px/1.45 ui-monospace,"SF Mono",Menlo,Consolas,monospace;word-break:break-all;color:var(--ink);user-select:all}
+.link mark{background:var(--mark-wash);color:var(--mark);border-radius:4px;padding:0 2px}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:12px 20px;border:0;border-radius:999px;font:600 15px/1 var(--font-text);text-decoration:none;cursor:pointer;background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.btn--mark{background:var(--mark);color:var(--on-mark);box-shadow:none}
+.btn--mark:hover{filter:brightness(1.08)}
+.btn--quiet{box-shadow:none;color:var(--ink-2);padding-inline:10px}
+.btn--quiet:hover{color:var(--ink)}
+.status{align-self:center;margin:0;color:var(--ok);font-size:14px}
+.saw{margin:10px 0 0;color:var(--ink-2);font-size:14px}
+.saw b{color:var(--ink);font-weight:600}
+.foot{margin-top:22px;color:var(--ink-2);font-size:14px}
+.foot code{font:13px ui-monospace,Menlo,Consolas,monospace;color:var(--ink)}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <a class="back" href="./">← Портфолио</a>
+  <h1>Персональная ссылка</h1>
+  <p class="lead">Для рассылки по компаниям. По такой ссылке <b>страница поздоровается с компанией по имени</b> и первым покажет нужный концепт, а в игре название компании встанет на площади буквами.</p>
+
+  <form class="card" id="f" autocomplete="off" novalidate>
+    <div class="field">
+      <label class="lbl" for="name">Название компании</label>
+      <input type="text" id="name" maxlength="60" placeholder="Например, Автосервис на Лесной" spellcheck="false">
+      <p class="saw" id="saw" hidden>Будет написано так: <b id="sawName"></b></p>
+    </div>
+    <div class="field">
+      <span class="lbl" id="nicheL">Чем занимается</span>
+      <fieldset class="seg" aria-labelledby="nicheL">
+        <legend>Чем занимается</legend>
+        <label><input type="radio" name="n" value="auto" checked>Автосервис</label>
+        <label><input type="radio" name="n" value="detailing">Детейлинг</label>
+        <label><input type="radio" name="n" value="salon">Салон красоты</label>
+        <label><input type="radio" name="n" value="">Другое</label>
+      </fieldset>
+    </div>
+    <div class="field">
+      <span class="lbl" id="whereL">Куда ведёт ссылка</span>
+      <fieldset class="seg seg--2" aria-labelledby="whereL">
+        <legend>Куда ведёт ссылка</legend>
+        <label><input type="radio" name="t" value="page" checked>Сайт-портфолио</label>
+        <label><input type="radio" name="t" value="game">Сразу в игру</label>
+      </fieldset>
+    </div>
+    <div class="field">
+      <label class="lbl" for="base">Адрес сайта</label>
+      <input type="url" id="base" inputmode="url" spellcheck="false" placeholder="https://ваш-сайт.ru/">
+      <p class="hint">Подставляется сам, если открыть эту страницу на вашем сайте. Можно вписать свой домен.</p>
+    </div>
+  </form>
+
+  <section class="card" aria-labelledby="outL">
+    <div class="out-k"><span class="lbl" id="outL">Ссылка</span><button type="button" class="btn btn--quiet" id="copyRaw">Скопировать без кириллицы</button></div>
+    <a class="link" id="link" href="#" target="_blank" rel="noopener"></a>
+    <div class="row">
+      <button type="button" class="btn btn--mark" id="copy">Скопировать ссылку</button>
+      <a class="btn" id="open" href="#" target="_blank" rel="noopener">Открыть</a>
+      <p class="status" id="st1" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="msgL">
+    <label class="lbl" id="msgL" for="msg">Сообщение владельцу</label>
+    <textarea id="msg" rows="6"></textarea>
+    <p class="hint">Черновик собирается из полей выше. Поправьте под себя перед отправкой.</p>
+    <div class="row"><button type="button" class="btn btn--mark" id="copyMsg">Скопировать сообщение</button><p class="status" id="st2" role="status" aria-live="polite"></p></div>
+  </section>
+
+  <p class="foot">Ссылку можно собрать и вручную: <code>?to=Название&amp;n=auto</code>, где <code>n</code> — <code>auto</code>, <code>detailing</code> или <code>salon</code>. Страница служебная, поисковики её не индексируют.</p>
+</main>
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var name = $('name'), base = $('base'), link = $('link'), open = $('open'), msg = $('msg');
+  var WHAT = { auto: 'автосервисов', detailing: 'студий детейлинга', salon: 'салонов красоты', '': 'локального бизнеса' };
+  var CONCEPT = { auto: 'концепт сайта для автосервиса', detailing: 'концепт сайта для детейлинга', salon: 'концепт сайта для салона красоты', '': 'мои работы' };
+  var store = {
+    get: function (k) { try { return localStorage.getItem('invite:' + k); } catch (e) { return null; } },
+    set: function (k, v) { try { localStorage.setItem('invite:' + k, v); } catch (e) { /* private mode */ } }
+  };
+  // the same rules the site applies to ?to=
+  function clean(s) {
+    try { s = s.replace(/[^\p{L}\p{N} \-.,«»"'&+№!]/gu, ''); } catch (e) { s = s.replace(/[<>{}\[\]\\\/|`~^$%#*=@;:?]/g, ''); }
+    return s.replace(/\s+/g, ' ').trim().slice(0, 40);
+  }
+  // readable link: letters and digits stay as they are, spaces become +, the rest is encoded
+  function pretty(s) {
+    var out = '';
+    for (var i = 0; i < s.length; i++) {
+      var ch = s.charAt(i);
+      var code = s.charCodeAt(i);
+      if (code >= 0xD800 && code <= 0xDBFF && i + 1 < s.length) { ch += s.charAt(++i); }
+      if (ch === ' ') out += '+';
+      else if (/^[0-9A-Za-zÀ-ɏЀ-ӿ-]$/.test(ch)) out += ch;
+      else out += encodeURIComponent(ch);
+    }
+    return out;
+  }
+  function folder() {
+    var h = location.href.split('#')[0].split('?')[0];
+    return /^https?:/.test(h) ? h.replace(/[^\/]*$/, '') : '';
+  }
+  function val(nm) { var c = document.querySelector('input[name="' + nm + '"]:checked'); return c ? c.value : ''; }
+  function build(raw) {
+    var b = base.value.trim() || folder() || 'https://ваш-сайт.ru/';
+    if (!/^https?:\/\//i.test(b)) b = 'https://' + b;
+    b = b.replace(/(index|invite|game)\.html$/i, '');
+    if (!/\/$/.test(b)) b += '/';
+    var to = clean(name.value), n = val('n'), parts = [];
+    if (n) parts.push('n=' + n);
+    if (to) parts.push('to=' + (raw ? encodeURIComponent(to).replace(/%20/g, '+') : pretty(to)));
+    return b + (val('t') === 'game' ? 'game.html' : '') + (parts.length ? '?' + parts.join('&') : '');
+  }
+  var msgTouched = false, lastAuto = '';
+  function draft(url) {
+    var to = clean(name.value), n = val('n');
+    var who = to ? '«' + to.replace(/^[«"']+|[»"']+$/g, '') + '»' : 'вас';
+    return 'Здравствуйте! Меня зовут Пётр, я делаю сайты для ' + WHAT[n] + '. Собрал для ' + who + ' страницу с примерами: ' + url + '\n\n' +
+      'Там ' + CONCEPT[n] + ', цены и короткая анкета. Если интересно, сделаю концепт главной страницы именно под ' + (to ? 'вашу компанию' : 'вас') + '.';
+  }
+  function render() {
+    var url = build(false);
+    link.textContent = url; link.href = url; open.href = url;
+    var to = clean(name.value);
+    $('saw').hidden = !name.value.trim() || to === name.value.replace(/\s+/g, ' ').trim();
+    $('sawName').textContent = to || '—';
+    var d = draft(url);
+    if (!msgTouched || msg.value === lastAuto) { msg.value = d; msgTouched = false; }
+    lastAuto = d;
+  }
+  function copy(text, st) {
+    var done = function () { st.textContent = 'Скопировано'; clearTimeout(st._t); st._t = setTimeout(function () { st.textContent = ''; }, 2200); };
+    var fallback = function () {
+      var t = document.createElement('textarea'); t.value = text; t.setAttribute('readonly', ''); t.style.position = 'fixed'; t.style.opacity = '0';
+      document.body.appendChild(t); t.select();
+      try { document.execCommand('copy'); done(); } catch (e) { st.textContent = 'Не получилось скопировать: выделите текст вручную'; }
+      t.remove();
+    };
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done, fallback); else fallback();
+  }
+
+  base.value = store.get('base') || folder();
+  $('f').addEventListener('input', function (e) { if (e.target === base) store.set('base', base.value.trim()); render(); });
+  $('f').addEventListener('change', render);
+  $('f').addEventListener('submit', function (e) { e.preventDefault(); });
+  msg.addEventListener('input', function () { msgTouched = true; });
+  $('copy').addEventListener('click', function () { copy(build(false), $('st1')); });
+  $('copyRaw').addEventListener('click', function () { copy(build(true), $('st1')); });
+  $('copyMsg').addEventListener('click', function () { copy(msg.value, $('st2')); });
+  render();
+})();
+</script>
+</body>
+</html>

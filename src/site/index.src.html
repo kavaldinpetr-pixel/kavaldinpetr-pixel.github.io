@@ -1,0 +1,1558 @@
+<title>Пётр Кавалдин</title>
+<meta name="description" content="Пётр Кавалдин, веб-дизайнер. Сайты для автосервисов, студий детейлинга и салонов красоты, Telegram-боты и мини-приложения.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500;1,600&family=Onest:wght@400..800&family=Sofia+Sans+Extra+Condensed:wght@600..900&display=swap">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Пётр Кавалдин — сайты для автосервисов, детейлинга и салонов красоты">
+<meta property="og:description" content="Портфолио с 3D-игрой: объезжайте проекты на джипе. Сайты с онлайн-записью и Telegram-боты.">
+<meta property="og:image" content="og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+/* Layout: 12-column grid (4 on phones), left-aligned throughout. Each case sits on its own canvas:
+   the two product cases span the full width with notes in a row below, the detailing case pairs an
+   8-column canvas with notes on 4. Magenta belongs only to the annotation layer: pins, highlights, grid.
+   Motion: one load sequence in the hero, mockups drift up as they scroll in, pins ping once. */
+/* Deliberately one visual world: deep space behind everything, so there is no light theme. */
+:root{
+  --paper:#060912;
+  --surface:#0E1322;
+  --canvas:#18203A;
+  --ink:#EEF1F7;
+  --ink-2:#98A2B8;
+  --rule:#1D2436;
+  --mark:#FF4FA0;
+  --on-mark:#0A0D16;
+  --mark-wash:rgba(255,79,160,.13);
+  --focus:#EEF1F7;
+  --bubble:#161C2C;
+  color-scheme:dark;
+  --font-display:"Sofia Sans Extra Condensed","Roboto Condensed","Arial Narrow","Helvetica Neue",sans-serif;
+  --font-text:"Onest","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --brief-font-h:var(--font-display);
+  --brief-font-t:var(--font-text);
+  --cols:4;
+  --gap:16px;
+  --edge:16px;
+}
+@media (min-width:900px){:root{--cols:12;--gap:24px;--edge:40px}}
+
+/* the universe: a fixed WebGL canvas under all content; plain stars if WebGL is unavailable */
+#space{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;display:block}
+html.no-gl body{background-image:radial-gradient(1.5px 1.5px at 12% 18%,rgba(255,255,255,.75),transparent 60%),radial-gradient(1px 1px at 72% 34%,rgba(255,255,255,.6),transparent 60%),radial-gradient(1px 1px at 38% 78%,rgba(255,255,255,.5),transparent 60%),radial-gradient(1.5px 1.5px at 88% 82%,rgba(255,79,160,.7),transparent 60%),radial-gradient(1px 1px at 55% 8%,rgba(242,197,104,.7),transparent 60%);background-size:420px 420px;background-attachment:fixed}
+
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-padding-top:16px}
+@media (min-width:900px){html{scroll-padding-top:84px}}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-text);font-size:17px;line-height:1.5;font-kerning:normal;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:31;background:var(--paper)}
+h1,h2,h3,p,ol,ul,dl,dd,figure{margin:0}
+ol,ul{padding:0;list-style:none}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+
+.wrap{max-width:1360px;margin-inline:auto;padding-left:max(var(--edge),env(safe-area-inset-left,0px));padding-right:max(var(--edge),env(safe-area-inset-right,0px))}
+.grid{display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));column-gap:var(--gap)}
+.display{font-family:var(--font-display);font-weight:800;line-height:.92;letter-spacing:-.004em;text-wrap:balance;overflow-wrap:break-word;hyphens:auto}
+/* until the web font arrives, ask the fallback for its condensed face too */
+.display,.logo,.f-eq,.step-n,.more-name,.svc-list b,.mail-addr,.dt-logo,.dt-title{font-stretch:condensed}
+
+/* header: static on phones, sticky with a sliding section marker from 900px */
+.top{padding-block:18px 0}
+.top .wrap{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;column-gap:32px;row-gap:4px}
+.logo{font-family:var(--font-display);font-weight:800;font-size:27px;line-height:1.1;text-decoration:none}
+.nav{position:relative;display:flex;flex-wrap:wrap;column-gap:16px;row-gap:2px;font-size:15px}
+.nav a{text-decoration:none;padding-block:4px}
+.nav-ink{display:none}
+@media (min-width:600px){.nav{column-gap:22px;font-size:16px}}
+@media (min-width:900px){
+  .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;padding-block:16px;background:rgba(6,9,18,.72);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:box-shadow .3s}
+  .top.is-stuck{box-shadow:0 1px 0 var(--rule)}
+  .nav a{opacity:.6;transition:opacity .2s}
+  .nav a:hover,.nav a[aria-current="true"]{opacity:1}
+  .nav-ink{display:block;position:absolute;left:0;bottom:-1px;width:var(--w,0px);height:2px;background:var(--ink);transform:translateX(var(--x,0px));opacity:0;transition:transform .5s var(--ease),width .5s var(--ease),opacity .25s}
+  .nav-ink.on{opacity:1}
+}
+
+/* hero */
+.hero{padding-block:clamp(44px,7vw,96px) clamp(64px,8vw,112px)}
+.hero-grid{row-gap:32px;align-items:end}
+.hero-h{grid-column:1/-1;display:flex;flex-direction:column;font-size:clamp(46px,8.3vw,116px)}
+.hero-h .ln{display:block;overflow:hidden;padding-block:.16em;margin-block:-.16em}
+.hero-h .ln > span{display:block}
+.hero-side{grid-column:1/-1;display:grid;gap:28px;padding-bottom:.3em}
+.lead{font-size:clamp(20px,1.6vw,23px);line-height:1.38;max-width:24em}
+.facts{display:grid;gap:10px;font-size:15px;line-height:1.4}
+.facts div{display:grid;grid-template-columns:7.2em minmax(0,1fr);gap:14px}
+.facts dt{color:var(--ink-2)}
+.facts dd{overflow-wrap:anywhere}
+@media (min-width:900px){.hero-h{grid-column:1/span 8}.hero-side{grid-column:9/span 4}}
+.play-cta{position:relative;z-index:3;justify-self:start;display:grid;gap:2px;padding:12px 20px;border-radius:14px;background:var(--ink);color:var(--paper);text-decoration:none;font-weight:600;font-size:16px;line-height:1.2;box-shadow:0 0 0 0 rgba(255,79,160,0);transition:transform .25s var(--ease),box-shadow .3s}
+.play-cta small{font-weight:400;font-size:13px;opacity:.7}
+.play-cta:hover{transform:translateY(-2px);box-shadow:0 14px 34px -12px rgba(255,79,160,.65)}
+
+/* hero playground: real UI pieces from the cases. A strip under the text on smaller screens,
+   a layer over the empty parts of the hero from 1200px. Drag them; the selection frame shows real sizes. */
+.hero-grid{position:relative}
+.play{grid-column:1/-1;position:relative;height:190px;pointer-events:none}
+@media (min-width:600px){.play{height:200px}}
+@media (min-width:1200px){.play{position:absolute;inset:0;height:auto;z-index:2}}
+.frag{position:absolute;left:var(--xm);top:var(--ym);pointer-events:auto;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none;translate:var(--dx,0px) var(--dy,0px);rotate:var(--r,0deg);transition:rotate .45s var(--ease),scale .3s var(--ease)}
+@media (min-width:1200px){.frag{left:var(--x);top:var(--y)}}
+.frag.is-drag{cursor:grabbing;rotate:0deg;scale:1.05;z-index:5}
+.frag--d{display:none}
+@media (min-width:1360px){.frag--d{display:block}}
+.frag--f{display:none}
+@media (min-width:600px){.frag--f{display:block}}
+@media (min-width:1200px) and (max-width:1359px){.frag--f{display:none}}
+.frag__par{translate:calc(var(--mx,0) * var(--depth,1) * 16px) calc(var(--my,0) * var(--depth,1) * 12px);transition:translate .9s var(--ease)}
+.frag__float{position:relative;display:block;transition:filter .3s}
+.frag.is-drag .frag__float{filter:drop-shadow(0 18px 20px rgba(10,14,24,.25))}
+.sel{position:absolute;inset:-6px;border:1.5px solid var(--mark);border-radius:3px;opacity:0;transition:opacity .2s;pointer-events:none}
+.frag:hover .sel,.frag.is-drag .sel{opacity:1}
+.sel i{position:absolute;width:7px;height:7px;background:#FFFFFF;border:1.5px solid var(--mark)}
+.sel i:nth-child(1){left:-4px;top:-4px}
+.sel i:nth-child(2){right:-4px;top:-4px}
+.sel i:nth-child(3){left:-4px;bottom:-4px}
+.sel i:nth-child(4){right:-4px;bottom:-4px}
+.sel__size{position:absolute;left:50%;top:calc(100% + 7px);translate:-50% 0;padding:2px 6px;border-radius:4px;background:var(--mark);color:var(--on-mark);font:600 11px/1.4 var(--font-text);white-space:nowrap;font-variant-numeric:tabular-nums}
+.hint{position:absolute;left:var(--xm);top:var(--ym);display:flex;align-items:center;gap:8px;padding:5px 12px 5px 5px;border-radius:999px;background:var(--bubble);box-shadow:0 10px 24px -14px rgba(10,14,24,.5);font-size:13px;line-height:1.2;white-space:nowrap;transition:opacity .4s,translate .4s var(--ease)}
+@media (min-width:1200px){.hint{left:var(--x);top:var(--y)}}
+.hint .av{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--mark);color:var(--on-mark);font:700 12px/1 var(--font-text)}
+.play.is-used .hint{opacity:0;translate:0 6px}
+.fu{display:block;white-space:nowrap;box-shadow:0 14px 26px -14px rgba(10,14,24,.5)}
+.fu-renew{padding:13px 22px;border-radius:14px;background:#0F1C3D;box-shadow:inset 0 0 0 1.5px rgba(242,197,104,.6),0 14px 26px -14px rgba(5,12,31,.6);color:#F2C568;font:650 15px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text",Roboto,"Segoe UI",system-ui,sans-serif}
+.fu-chip{padding:7px 10px;border-radius:8px;background:#45E4A4;color:#04281A;font:750 14px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text",Roboto,"Segoe UI",system-ui,sans-serif}
+.fu-status{display:flex;align-items:center;gap:8px;padding:10px 16px 10px 12px;border-radius:999px;background:#0C2A2E;box-shadow:inset 0 0 0 1px rgba(69,228,164,.4),0 14px 26px -14px rgba(5,12,31,.6);color:#45E4A4;font:600 14px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text",Roboto,"Segoe UI",system-ui,sans-serif}
+.fu-status i{width:8px;height:8px;border-radius:50%;background:#45E4A4;box-shadow:0 0 0 4px rgba(69,228,164,.16)}
+.fu-slots{display:grid;gap:10px;padding:14px 16px;border-radius:14px;background:#FFFFFF;color:#16181C;font:14px/1.2 var(--font-text)}
+.fu-slots b{font-weight:700}
+.fu-slots .t{display:flex;gap:6px}
+.fu-slots .t span{padding:6px 9px;border-radius:7px;box-shadow:inset 0 0 0 1px #D9DCE1;font-weight:600;font-size:13px;font-variant-numeric:tabular-nums}
+.fu-slots .t .on{background:#16181C;color:#FFFFFF;box-shadow:none}
+.fu-seg{position:relative;display:grid;grid-template-columns:repeat(3,1fr);width:252px;padding:4px;border-radius:999px;background:#1B1D21;font:500 13px/1 var(--font-text)}
+.fu-seg .th{position:absolute;top:4px;bottom:4px;left:4px;width:calc((100% - 8px) / 3);border-radius:999px;background:#ECE8DF;translate:calc(var(--i,0) * 100%) 0;transition:translate .45s cubic-bezier(.3,.75,.2,1)}
+.fu-seg span[data-i]{position:relative;padding:10px 0;text-align:center;color:#8E9197;transition:color .3s}
+.fu-seg span.on{color:#111214}
+
+/* section heads */
+.sec{padding-block:clamp(72px,9vw,128px)}
+.sec-head{row-gap:14px;margin-bottom:clamp(36px,5vw,64px);align-items:end}
+.sec-head h2,.about-grid h2,.contact-grid h2{grid-column:1/-1;font-size:clamp(50px,7vw,100px)}
+.sec-head p{grid-column:1/-1;color:var(--ink-2);max-width:32em}
+@media (min-width:900px){.sec-head h2{grid-column:1/span 6}.sec-head p{grid-column:8/span 5;padding-bottom:.4em}}
+
+/* cases */
+.work .sec-head{margin-bottom:0;padding-bottom:clamp(36px,5vw,56px)}
+.case{padding-bottom:clamp(56px,7vw,96px)}
+.case-head{border-top:1px solid var(--rule);padding-top:clamp(24px,3vw,36px);row-gap:22px}
+.case-title{grid-column:1/-1;display:grid;gap:10px;align-content:start}
+.case-title h3{font-size:clamp(46px,5.6vw,80px)}
+.case-sub{font-size:clamp(19px,1.5vw,22px);line-height:1.3}
+.case-text{max-width:35em;margin-top:8px}
+.meta{grid-column:1/-1;display:grid;gap:9px;font-size:15px;line-height:1.4;align-content:start}
+.meta div{display:grid;grid-template-columns:7.2em minmax(0,1fr);gap:14px}
+.meta dt{color:var(--ink-2)}
+@media (min-width:900px){.case-title{grid-column:1/span 7}.meta{grid-column:9/span 4;padding-top:10px}}
+.case-body{margin-top:clamp(28px,3.5vw,44px);row-gap:20px}
+.stage{grid-column:1/-1;min-width:0;position:relative;border-radius:4px;padding:clamp(28px,4vw,56px) clamp(16px,4vw,56px);display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:clamp(28px,4vw,48px)}
+.notes{grid-column:1/-1;display:grid;gap:2px;align-content:start}
+@media (min-width:900px){
+  .stage{grid-column:1/span 8}
+  .notes{grid-column:9/span 4}
+  .case--wide .stage{grid-column:1/-1}
+  .case--wide .notes{grid-column:1/-1;grid-template-columns:repeat(4,minmax(0,1fr));column-gap:var(--gap);margin-top:6px}
+}
+.notes li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:12px;margin-inline:-12px;border-radius:4px;cursor:pointer;transition:background-color .2s}
+.notes li:hover,.notes li.is-lit{background:var(--mark-wash)}
+.notes p{max-width:34em}
+
+/* annotation pins and highlights */
+.pin{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--mark);color:var(--on-mark);font:700 12px/1 var(--font-text);font-variant-numeric:tabular-nums}
+.notes .pin{margin-top:1px;transition:scale .2s var(--ease)}
+.notes li.is-lit .pin{scale:1.12}
+.mock [data-note]{position:relative}
+.mock .hot{position:absolute;left:var(--l);top:var(--t);width:var(--w);height:var(--h);border-radius:2.6cqi}
+.mock .pin{position:absolute;top:-10px;right:-10px;z-index:4;box-shadow:0 0 0 2px var(--paper);transition:scale .2s var(--ease)}
+.mock .pin--in{top:8px;right:8px}
+.mock .pin--top{top:-11px;right:16px}
+.mock .pin--tc{top:-11px;right:auto;left:50%;translate:-50% 0}
+.mock .pin--after{top:50%;right:auto;left:calc(100% + 6px);translate:0 -50%}
+.mock [data-note],.tile[data-note]{outline:2px solid transparent;outline-offset:12px;transition:outline-color .25s,outline-offset .4s var(--ease),background-color .25s}
+.mock [data-note].is-lit,.tile.is-lit{outline-color:var(--mark);outline-offset:3px}
+.mock .hot.is-lit{background:rgba(255,92,162,.12)}
+.mock .is-lit > .pin{scale:1.18}
+
+/* device: phone */
+.phone{--w:288px;width:min(var(--w),100%);flex:none;container-type:inline-size;position:relative}
+.phone__body{aspect-ratio:288/600;border-radius:13.5cqi;padding:2.8cqi;background:#0D0E11;box-shadow:inset 0 0 0 1px #2C2F36,0 0 0 1px rgba(255,255,255,.07),0 40px 80px -30px rgba(0,0,0,.9)}
+.phone__screen{position:relative;height:100%;overflow:hidden;border-radius:10.9cqi;font-size:3.47cqi;line-height:1.3;display:flex;flex-direction:column}
+.phone__screen::before{content:"";position:absolute;top:1.15em;left:50%;width:30%;height:2.2em;transform:translateX(-50%);border-radius:999px;background:#0D0E11;z-index:5}
+.phone--shot .phone__body{aspect-ratio:288/605.6}
+.phone--shot .phone__screen{background:#000000}
+.phone--shot img{display:block;width:100%;height:100%;object-fit:cover}
+
+/* device: browser */
+.browser{width:100%;container-type:inline-size;border-radius:10px;overflow:hidden;background:#FFFFFF;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 40px 90px -30px rgba(0,0,0,.9)}
+.browser__bar{display:flex;align-items:center;gap:6px;height:30px;padding-inline:12px;background:#E8EAEE}
+.browser__bar i{width:9px;height:9px;border-radius:50%;background:#C5C9D0}
+.browser__url{margin-left:12px;width:min(46%,280px);height:18px;padding-inline:9px;border-radius:5px;background:#FFFFFF;color:#6B717D;font:11px/18px var(--font-text);white-space:nowrap;overflow:hidden}
+.site{position:relative;font-size:1.42cqi;line-height:1.3;aspect-ratio:70/45;overflow:hidden}
+
+/* style tiles on the canvas */
+.tile{position:relative;flex:none;width:min(248px,100%);display:grid;gap:12px;align-content:start;padding:16px;border-radius:6px;background:var(--surface);box-shadow:inset 0 0 0 1px rgba(255,255,255,.07),0 30px 60px -30px rgba(0,0,0,.9);font-size:15px;line-height:1.35}
+.tile figcaption{font-weight:600}
+.tile-note{color:var(--ink-2);font-size:14px}
+.chips{display:flex;flex-direction:column;height:248px;border-radius:4px;overflow:hidden}
+.chip{flex:var(--f) 1 0;min-height:34px;display:flex;align-items:flex-end;justify-content:space-between;gap:8px;padding:7px 10px;background:var(--c);color:var(--t);font-size:13px;font-variant-numeric:tabular-nums}
+.f-eq{font-family:var(--font-display);font-weight:700;font-size:28px;line-height:1;text-wrap:balance}
+.f-k{display:grid;gap:2px}
+.f-k div{display:flex;justify-content:space-between;padding:8px 10px;border-radius:4px;font-variant-numeric:tabular-nums;transition:background-color .3s}
+.f-k div.on{background:var(--canvas)}
+.f-k dd{font-weight:600}
+
+/* case 1: STEOVPN, real screenshots on the app's own night */
+.stage--vpn{align-items:flex-start}
+.stage--vpn .phone figcaption{margin-top:16px;text-align:center;color:#A9B5D3;font-size:14px}
+@media (max-width:599px){
+  .stage--vpn{flex-wrap:nowrap;justify-content:flex-start;gap:16px;padding-inline:20px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:20px;overscroll-behavior-x:contain;scrollbar-width:none}
+  .stage--vpn::-webkit-scrollbar{display:none}
+  .stage--vpn > *{scroll-snap-align:start}
+  .stage--vpn .phone{--w:236px}
+  .stage--vpn .tile{width:236px}
+}
+@media (min-width:900px){
+  .stage--vpn{gap:56px}
+  .stage--vpn .phone:nth-child(2){margin-top:72px}
+}
+
+/* case 2: auto service concept */
+.a{--a-ink:#16181C;--a-mute:#555B66;--a-line:#E6E8EC;--a-soft:#F1F2F4;--a-orange:#FF5B1A;background:#FFFFFF;color:var(--a-ink);font-family:var(--font-text)}
+.a-btn{display:inline-block;padding:.85em 1.4em;border-radius:.55em;background:var(--a-orange);color:#FFFFFF;font-weight:600;white-space:nowrap;text-align:center}
+.a-btn--dark{background:var(--a-ink)}
+.a-btn--line{background:transparent;color:var(--a-ink);box-shadow:inset 0 0 0 1.5px var(--a-ink)}
+.a-logo{display:inline-flex;align-items:center;gap:.55em;font-weight:800;font-size:1.15em;letter-spacing:-.01em;white-space:nowrap}
+.a-logo b{display:grid;place-items:center;width:1.75em;height:1.75em;border-radius:.35em;background:var(--a-orange);color:#FFFFFF;font-size:.8em}
+.a-head{display:flex;align-items:center;gap:2.2em;padding:1.5em 3em;box-shadow:inset 0 -1px 0 var(--a-line)}
+.a-nav{display:flex;gap:1.9em;margin-right:auto;color:var(--a-mute)}
+.a-call{display:flex;align-items:center;gap:1.3em}
+.a-phone{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.a-hero{display:grid;grid-template-columns:1.35fr 1fr;gap:3em;padding:3.2em 3em 2.6em;align-items:start}
+.a-h1{font-size:3.35em;line-height:1.03;font-weight:800;letter-spacing:-.028em;max-width:10.5em}
+.a-lead{margin:1em 0 1.6em;color:var(--a-mute);font-size:1.1em;line-height:1.45;max-width:27em}
+.a-actions{display:flex;gap:.8em}
+.a-slots{padding:1.6em;border-radius:1em;background:var(--a-soft)}
+.a-slots-t{font-weight:700;font-size:1.2em}
+.a-slots-s{margin:.35em 0 1.1em;color:var(--a-mute)}
+.a-times{display:flex;flex-wrap:wrap;gap:.55em}
+.a-times span{padding:.7em 1.05em;border-radius:.6em;background:#FFFFFF;box-shadow:inset 0 0 0 1px #D9DCE1;font-weight:600;font-variant-numeric:tabular-nums}
+.a-times .on{background:var(--a-ink);color:#FFFFFF;box-shadow:none}
+.a-prices{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.4em;margin:0 3em 2.6em}
+.a-price{padding-top:.9em;box-shadow:inset 0 2px 0 var(--a-ink)}
+.a-price b{display:block}
+.a-price span{display:block;color:var(--a-mute);font-size:.92em;margin-top:.2em}
+.a-price strong{display:block;margin-top:.6em;font-size:1.45em;font-weight:800;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.a-route{display:grid;grid-template-columns:1fr 1.3fr;gap:1.8em;margin:0 3em;padding:1.6em;border-radius:1em;background:var(--a-soft);align-items:start}
+.a-map{display:block;width:100%;aspect-ratio:16/9;border-radius:.6em;overflow:hidden}
+.a-map svg{display:block;width:100%;height:100%}
+.a-route-t{font-weight:700;font-size:1.2em;margin-bottom:.4em}
+.a-route p{color:var(--a-mute);line-height:1.45}
+.am-head{display:flex;align-items:center;justify-content:space-between;padding:4em 1.4em 1em}
+.am-burger{width:1.7em;height:1.1em;background:linear-gradient(var(--a-ink),var(--a-ink)) top/100% .18em no-repeat,linear-gradient(var(--a-ink),var(--a-ink)) center/100% .18em no-repeat,linear-gradient(var(--a-ink),var(--a-ink)) bottom/100% .18em no-repeat}
+.am-main{flex:1;min-height:0;display:flex;flex-direction:column;gap:1.25em;padding:.4em 1.4em 7em}
+.am-h1{font-size:2.45em;line-height:1.04;font-weight:800;letter-spacing:-.028em}
+.am-slots{display:grid;gap:.7em;padding:1.1em 1.2em;border-radius:.9em;background:var(--a-soft);font-weight:700}
+.am-slots .a-times span{padding:.55em .8em;font-size:.95em}
+.am-sec{margin:0 0 .15em;font-weight:700}
+.am-prices div{display:flex;justify-content:space-between;gap:1em;padding:.75em 0;box-shadow:inset 0 -1px 0 var(--a-line)}
+.am-prices span{color:var(--a-mute)}
+.am-prices b{white-space:nowrap;font-variant-numeric:tabular-nums}
+.am-route{display:grid;gap:.6em}
+.am-route .a-map{aspect-ratio:2/1}
+.am-route > span{font-weight:600}
+.am-bar{position:absolute;left:0;right:0;bottom:0;display:grid;grid-template-columns:1fr 1fr;gap:.6em;padding:1em 1.2em 2.3em;background:#FFFFFF;box-shadow:0 -1px 0 var(--a-line),0 -1.2em 2em -1em rgba(22,24,28,.12)}
+.am-bar .a-btn{padding:1em 0}
+.stage--auto{display:grid;grid-template-columns:minmax(0,1fr);justify-items:center}
+.stage--auto .browser{display:none}
+@media (min-width:700px){
+  .stage--auto{grid-template-columns:minmax(0,1fr) 184px;align-items:end;justify-items:stretch;column-gap:28px}
+  .stage--auto .browser{display:block}
+  .stage--auto .phone{width:184px}
+}
+@media (min-width:900px){
+  .stage--auto{grid-template-columns:minmax(0,860px) 236px;justify-content:center;column-gap:44px}
+  .stage--auto .phone{width:236px}
+}
+
+/* case 3: detailing concept «Слой» */
+.dt{--d-bg:#0F1012;--d-panel:#1B1D21;--d-line:#2A2D33;--d-text:#EEEEEB;--d-mute:#8E9197;--d-pearl:#ECE8DF;background:var(--d-bg);color:var(--d-text);font-family:var(--font-text)}
+.dt-head{display:flex;align-items:baseline;gap:.7em;padding:4em 1.4em 1.1em}
+.dt-logo{font-family:var(--font-display);font-weight:800;font-size:1.6em;letter-spacing:.32em;text-transform:uppercase;line-height:1}
+.dt-kind{color:var(--d-mute);font-size:.95em}
+.dt-menu{margin-left:auto;align-self:center;width:1.6em;height:.7em;background:linear-gradient(var(--d-text),var(--d-text)) top/100% .16em no-repeat,linear-gradient(var(--d-text),var(--d-text)) bottom/100% .16em no-repeat}
+.dt-ba{--pos:54%;position:relative;height:16.5em;margin:0 1.4em;border-radius:1.2em;overflow:hidden;flex:none}
+.dt-after,.dt-before{position:absolute;inset:0}
+.dt-after{background:
+  linear-gradient(114deg,transparent 0 45%,rgba(255,255,255,.85) 46.4%,rgba(255,255,255,0) 48.6%),
+  linear-gradient(114deg,transparent 0 51%,rgba(255,255,255,.14) 52%,transparent 60%),
+  radial-gradient(130% 90% at 25% -10%,#4A515C 0%,#1A1D22 46%,#060708 100%)}
+.dt-before{clip-path:inset(0 calc(100% - var(--pos)) 0 0);background:
+  repeating-radial-gradient(circle at 68% 36%,rgba(255,255,255,.09) 0 .07em,transparent .1em .55em),
+  repeating-radial-gradient(circle at 18% 72%,rgba(255,255,255,.06) 0 .07em,transparent .1em .7em),
+  linear-gradient(114deg,transparent 0 42%,rgba(255,255,255,.2) 47%,transparent 55%),
+  radial-gradient(130% 90% at 25% -10%,#5D636B 0%,#33373D 50%,#202327 100%)}
+.dt-handle{position:absolute;top:0;bottom:0;left:var(--pos);width:2px;margin-left:-1px;background:var(--d-pearl);pointer-events:none}
+.dt-handle::after{content:"";position:absolute;top:50%;left:50%;width:2.2em;height:2.2em;transform:translate(-50%,-50%);border-radius:50%;background:var(--d-pearl);box-shadow:0 .2em .8em rgba(0,0,0,.45)}
+.dt-tag{position:absolute;bottom:.9em;padding:.3em .7em;border-radius:999px;background:rgba(15,16,18,.62);font-size:.85em;pointer-events:none}
+.dt-tag--l{left:.9em}
+.dt-tag--r{right:.9em}
+.dt-ba input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize}
+.dt-ba:has(input:focus-visible) .dt-handle::after{outline:2px solid var(--d-pearl);outline-offset:3px}
+.dt-title{padding:.5em .61em 0;font-family:var(--font-display);font-weight:800;font-size:2.3em;line-height:.95}
+.dt-seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.25em;margin:1.1em 1.4em .3em;padding:.28em;border-radius:999px;background:var(--d-panel)}
+.dt-thumb{position:absolute;top:.28em;bottom:.28em;left:.28em;width:calc((100% - 1.06em) / 3);border-radius:999px;background:var(--d-pearl);translate:calc(var(--i,0) * (100% + .25em)) 0;transition:translate .45s cubic-bezier(.3,.75,.2,1)}
+.dt-seg button{position:relative;z-index:1;padding:.65em 0;border:0;border-radius:999px;background:transparent;color:var(--d-mute);font-size:.95em;cursor:pointer;transition:color .3s}
+.dt-seg button[aria-pressed="true"]{color:#111214}
+.dt-seg button:focus-visible{outline:2px solid var(--d-pearl);outline-offset:2px}
+.dt-list{padding:0 1.4em}
+.dt-list li{display:flex;justify-content:space-between;align-items:flex-start;gap:1em;padding:.85em 0;box-shadow:inset 0 -1px 0 var(--d-line)}
+.dt-list b{display:block;font-weight:600}
+.dt-list em{display:inline-block;margin-top:.15em;font-style:normal;color:var(--d-mute);font-size:.92em}
+.dt-list strong{font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
+.dt-cta{display:block;margin:1.1em 1.4em 0;padding:1em;border-radius:999px;background:var(--d-pearl);color:#111214;text-align:center;font-weight:700}
+
+/* more work */
+.more{padding-bottom:clamp(24px,4vw,48px)}
+.more-head{border-top:1px solid var(--rule);padding-top:clamp(24px,3vw,36px)}
+.more-head h3{font-size:clamp(40px,4.4vw,60px)}
+.more-list{display:grid;gap:28px;margin-top:clamp(20px,3vw,32px)}
+.more-list li{row-gap:6px}
+.more-name{grid-column:1/-1;font-family:var(--font-display);font-weight:700;font-size:30px;line-height:1.05}
+.more-desc{grid-column:1/-1;max-width:40em}
+.more-year{grid-column:1/-1;color:var(--ink-2);font-variant-numeric:tabular-nums}
+@media (min-width:900px){.more-name{grid-column:1/span 4}.more-desc{grid-column:5/span 6}.more-year{grid-column:12/span 1;text-align:right}}
+
+/* about + services */
+.about{border-top:1px solid var(--rule)}
+.about-grid{row-gap:28px}
+.about-text{grid-column:1/-1;display:grid;gap:18px;max-width:36em}
+.about-text .big{font-size:clamp(22px,2vw,28px);line-height:1.32}
+.svc{row-gap:28px;margin-top:clamp(56px,7vw,96px)}
+.svc h3{grid-column:1/-1;font-size:clamp(38px,3.8vw,54px)}
+.svc-list{grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15em),1fr));gap:32px var(--gap)}
+.svc-list b{display:block;margin-bottom:8px;font-family:var(--font-display);font-weight:700;font-size:30px;line-height:1.02}
+.svc-list p{color:var(--ink-2);max-width:26em}
+@media (min-width:900px){
+  .about-grid h2{grid-column:1/span 5}.about-text{grid-column:7/span 6}
+  .svc h3{grid-column:1/span 5}.svc-list{grid-column:7/span 6;grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+/* process: the rule over each step fills in order as the section scrolls by */
+.approach{border-top:1px solid var(--rule)}
+.steps{row-gap:36px}
+.steps li{position:relative;grid-column:1/-1;display:grid;gap:10px;align-content:start;padding-top:18px;box-shadow:inset 0 1px 0 var(--rule)}
+.steps li::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--ink);transform:scaleX(0);transform-origin:left}
+.step-n{font-family:var(--font-display);font-weight:800;font-size:clamp(60px,6vw,88px);line-height:.85;font-variant-numeric:tabular-nums}
+.steps b{font-size:21px;font-weight:600;line-height:1.25}
+.steps p{color:var(--ink-2);max-width:24em}
+@media (min-width:620px){.steps li{grid-column:span 2}}
+@media (min-width:900px){.steps li{grid-column:span 3}}
+
+/* contact */
+.contact{border-top:1px solid var(--rule)}
+.contact-grid{row-gap:20px;align-items:end}
+.contact-text{grid-column:1/-1;max-width:30em}
+@media (min-width:900px){.contact-grid h2{grid-column:1/span 7}.contact-text{grid-column:9/span 4;padding-bottom:.4em}}
+.mail{display:grid;gap:18px;margin-top:clamp(40px,6vw,80px)}
+.mail-addr{font-family:var(--font-display);font-weight:800;font-size:clamp(34px,8vw,112px);line-height:.95;letter-spacing:-.01em;text-decoration:none;overflow-wrap:anywhere;background:linear-gradient(currentColor,currentColor) left bottom/0 3px no-repeat;transition:background-size .5s var(--ease)}
+.mail-addr:hover{background-size:100% 3px}
+.mail-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px 20px}
+.copy{padding:10px 18px;border-radius:999px;border:1.5px solid var(--ink);background:transparent;cursor:pointer;font-size:16px;transition:background-color .25s,color .25s}
+.copy:hover,.copy.is-done{background:var(--ink);color:var(--paper)}
+.copy-state{color:var(--ink-2);font-size:15px}
+.links{display:flex;flex-wrap:wrap;gap:10px 28px;font-size:17px}
+.links a{text-decoration-thickness:1px;text-underline-offset:4px}
+
+/* footer + grid overlay */
+.foot{padding-block:28px 40px}
+.foot .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;color:var(--ink-2);font-size:15px}
+.grid-btn{padding:0;border:0;background:none;color:var(--ink-2);font-size:15px;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px;cursor:pointer}
+.grid-btn[aria-pressed="true"]{color:var(--mark)}
+.overlay{position:fixed;inset:0;z-index:50;pointer-events:none}
+.overlay .wrap{height:100%;grid-template-rows:100%}
+.overlay i{background:var(--mark-wash);transform-origin:top}
+.overlay i:nth-child(n+5){display:none}
+@media (min-width:900px){.overlay i:nth-child(n+5){display:block}}
+
+/* motion */
+@media (prefers-reduced-motion:no-preference){
+  .hero-h .ln > span{animation:rise 1.05s cubic-bezier(.16,.84,.24,1) both;animation-delay:calc(var(--i) * 90ms + 60ms)}
+  .hero-side{animation:arrive .8s var(--ease) .5s both}
+  .top .wrap{animation:fade .6s ease-out both}
+  .stage.is-in .mock .pin{animation:ping .9s var(--ease) both;animation-delay:calc(var(--n,1) * 130ms + 150ms)}
+  .overlay:not([hidden]) i{animation:col .55s var(--ease) both;animation-delay:calc(var(--c) * 28ms)}
+  .frag{animation:pop .7s cubic-bezier(.34,1.56,.64,1) backwards;animation-delay:calc(var(--k,0) * 90ms + 750ms)}
+  .hint{animation:fade .5s ease-out 1.5s backwards}
+  .frag__float{animation:bob var(--dur,7s) ease-in-out var(--del,0s) infinite alternate}
+  .play.is-off .frag__float,.frag.is-drag .frag__float{animation-play-state:paused}
+}
+@keyframes pop{from{opacity:0;scale:.6}to{opacity:1;scale:1}}
+@keyframes bob{from{transform:translateY(-5px) rotate(-.7deg)}to{transform:translateY(5px) rotate(.7deg)}}
+@keyframes rise{from{transform:translateY(110%)}to{transform:none}}
+@keyframes arrive{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes ping{0%{scale:1;box-shadow:0 0 0 2px var(--paper),0 0 0 0 var(--mark)}35%{scale:1.4}100%{scale:1;box-shadow:0 0 0 2px var(--paper),0 0 0 14px transparent}}
+@keyframes col{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes fly-in{from{opacity:.3;transform:perspective(1400px) translateY(140px) rotateX(32deg) scale(.86)}to{opacity:1;transform:none}}
+@keyframes fly-in-2{from{opacity:.3;transform:perspective(1400px) translateY(200px) rotateX(26deg) rotateY(-22deg) scale(.84)}to{opacity:1;transform:none}}
+@keyframes fly-in-3{from{opacity:.3;transform:perspective(1400px) translateY(170px) rotateY(28deg) scale(.86)}to{opacity:1;transform:none}}
+@keyframes warp-in{from{opacity:.15;transform:perspective(700px) translateZ(-420px) translateY(60px);filter:blur(12px)}to{opacity:1;transform:none;filter:none}}
+@keyframes hero-out{to{opacity:0;transform:scale(1.14) translateY(-40px);filter:blur(8px)}}
+@keyframes fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@supports (animation-timeline:view()){
+  @media (prefers-reduced-motion:no-preference){
+    .stage > .phone,.stage > .browser,.stage > .tile{animation:fly-in linear both;animation-timeline:view();animation-range:entry 0% cover 42%}
+    .stage > :nth-child(2){animation-name:fly-in-2}
+    .stage > :nth-child(3){animation-name:fly-in-3}
+    .sec-head h2,.about-grid h2,.contact-grid h2,.case-title h3,.more-head h3,.svc h3{transform-origin:0 100%;animation:warp-in linear both;animation-timeline:view();animation-range:entry 0% cover 32%}
+    .hero .hero-grid{animation:hero-out linear both;animation-timeline:view();animation-range:exit 5% exit 85%}
+    .steps li::before{animation:fill linear both;animation-timeline:view();animation-range:cover 20% cover 34%}
+    .steps li:nth-child(2)::before{animation-range:cover 30% cover 44%}
+    .steps li:nth-child(3)::before{animation-range:cover 40% cover 54%}
+    .steps li:nth-child(4)::before{animation-range:cover 50% cover 64%}
+  }
+  @media (max-width:599px){.stage--vpn > *,.stage--salon > *{animation:none!important}}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+
+/* «Обсудить сайт»: header button, hero pair, floating button on phones */
+.top-cta{display:none}
+@media (min-width:900px){
+  .top .wrap{justify-content:flex-start;align-items:center}
+  .top .nav{margin-left:auto}
+  .top-cta{display:inline-flex;align-items:center;margin-left:26px;padding:10px 18px;border-radius:999px;border:0;background:var(--ink);color:var(--paper);font:600 15px/1 var(--font-text);cursor:pointer;transition:transform .2s var(--ease),box-shadow .3s}
+  .top-cta:hover{transform:translateY(-1px);box-shadow:0 10px 26px -12px rgba(255,79,160,.75)}
+}
+.hero-ctas{position:relative;z-index:3;display:flex;flex-wrap:wrap;gap:12px}
+.talk-cta{display:grid;gap:2px;padding:12px 20px;border-radius:14px;border:0;background:transparent;box-shadow:inset 0 0 0 1.5px var(--ink);color:var(--ink);text-align:left;font-weight:600;font-size:16px;line-height:1.2;cursor:pointer;transition:background-color .25s,color .25s,transform .25s var(--ease)}
+.talk-cta small{font-weight:400;font-size:13px;opacity:.7}
+.talk-cta:hover{background:var(--ink);color:var(--paper);transform:translateY(-2px)}
+.facts dd a{text-decoration-thickness:1px;text-underline-offset:3px}
+.fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));z-index:40;padding:14px 20px;border-radius:999px;border:0;background:var(--ink);color:var(--paper);font:600 15px/1 var(--font-text);box-shadow:0 16px 34px -12px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.08);cursor:pointer;transform:translateY(160%);transition:transform .4s var(--ease)}
+.fab.on{transform:none}
+@media (min-width:900px){.fab{display:none}}
+
+/* personal greeting from an outreach link (?to=…&n=…) */
+.hello{padding-top:clamp(18px,3vw,28px)}
+.hello-in{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 28px}
+.hello-box{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 28px;padding:18px 22px;border-radius:14px;background:linear-gradient(120deg,rgba(255,79,160,.2),rgba(127,183,255,.12)),rgba(10,13,24,.9);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+.hello-t{max-width:46em;font-size:17px;line-height:1.45}
+.hello-t b{display:block;font-family:var(--font-display);font-weight:800;font-size:clamp(30px,3.4vw,42px);line-height:1;margin-bottom:6px}
+.hello-act{display:flex;flex-wrap:wrap;gap:10px}
+.hello-go,.hello-talk{padding:11px 18px;border-radius:999px;font:600 15px/1 var(--font-text);text-decoration:none;cursor:pointer}
+.hello-go{background:var(--ink);color:var(--paper)}
+.hello-talk{border:0;background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
+
+/* prices */
+.prices{border-top:1px solid var(--rule)}
+.plans{row-gap:var(--gap)}
+.plan{position:relative;grid-column:1/-1;display:flex;flex-direction:column;gap:14px;padding:26px 24px 24px;border-radius:8px;background:var(--surface);box-shadow:inset 0 0 0 1px rgba(255,255,255,.07)}
+@media (min-width:900px){.plan{grid-column:span 4}}
+.plan-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.plan-name{font:600 20px/1.25 var(--font-text)}
+.plan-tag{position:absolute;top:-12px;right:20px;padding:5px 11px;border-radius:999px;background:var(--ink);color:var(--paper);font-size:12px;font-weight:600;white-space:nowrap}
+.plan-price{font-family:var(--font-display);font-weight:800;font-size:clamp(50px,4.8vw,66px);line-height:.9;font-variant-numeric:tabular-nums;letter-spacing:-.005em}
+.plan-price span{margin-right:.22em;font-size:.42em;font-weight:700;color:var(--ink-2);letter-spacing:0}
+.plan-desc{color:var(--ink-2)}
+.plan-list{display:grid;gap:9px;font-size:15px;line-height:1.4}
+.plan-list li{position:relative;padding-left:24px}
+.plan-list li::before{content:"";position:absolute;left:3px;top:.42em;width:10px;height:5px;border-left:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:rotate(-45deg)}
+.plan-btn{margin-top:auto;align-self:flex-start;padding:12px 20px;border-radius:999px;border:0;background:transparent;box-shadow:inset 0 0 0 1.5px var(--ink);color:var(--ink);font:600 15px/1 var(--font-text);cursor:pointer;transition:background-color .25s,color .25s}
+.plan-btn:hover,.plan--main .plan-btn{background:var(--ink);color:var(--paper)}
+.plan--main{box-shadow:inset 0 0 0 1.5px rgba(238,241,247,.5)}
+.plans-note{margin-top:20px;color:var(--ink-2);font-size:15px}
+
+/* contact: the brief first, the address below */
+.talk-big{justify-self:start;display:inline-flex;align-items:center;gap:10px;padding:16px 26px;border-radius:999px;border:0;background:var(--ink);color:var(--paper);font:600 18px/1 var(--font-text);cursor:pointer;transition:transform .25s var(--ease),box-shadow .3s}
+.talk-big:hover{transform:translateY(-2px);box-shadow:0 16px 36px -14px rgba(255,79,160,.75)}
+.talk-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px 22px;margin-top:clamp(28px,4vw,48px)}
+.talk-row p{color:var(--ink-2);font-size:15px}
+
+/* case 4: beauty salon concept «Миндаль» */
+.sl{--s-bg:#F7F1EA;--s-ink:#2E2320;--s-mute:#8C7B74;--s-rose:#C98386;--s-blush:#F1DDD7;--s-line:#E6DBD1;--s-white:#FFFDFB;position:relative;background:var(--s-bg);color:var(--s-ink);font-family:var(--font-text)}
+.sl-serif{font-family:"Lora",Georgia,"Times New Roman",serif}
+.sl-head{display:flex;align-items:baseline;gap:.6em;padding:4em 1.4em .9em}
+.sl-logo{font-family:"Lora",Georgia,serif;font-style:italic;font-weight:600;font-size:1.8em;line-height:1;letter-spacing:-.01em}
+.sl-kind{color:var(--s-mute);font-size:.9em}
+.sl-menu{margin-left:auto;align-self:center;width:1.6em;height:.7em;background:linear-gradient(var(--s-ink),var(--s-ink)) top/100% .14em no-repeat,linear-gradient(var(--s-ink),var(--s-ink)) bottom/100% .14em no-repeat}
+.sl-hero{position:relative;flex:none;height:12.6em;margin:0 1.4em;border-radius:1.2em;overflow:hidden;background:radial-gradient(70% 60% at 78% 18%,#FFF6EE 0%,rgba(255,246,238,0) 70%),linear-gradient(160deg,#EFD7CF 0%,#E3C1B8 55%,#D7AFA6 100%)}
+.sl-arch{position:absolute;left:46%;bottom:0;width:44%;height:84%;border-radius:999px 999px 0 0;background:linear-gradient(180deg,#FBEFE9,#F1DBD3);box-shadow:inset 0 0 0 .35em #F7E6DF,0 1em 2em -1em rgba(120,70,60,.45)}
+.sl-arch::after{content:"";position:absolute;left:16%;top:12%;width:22%;height:55%;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.75),rgba(255,255,255,0))}
+.sl-vase{position:absolute;left:76%;bottom:0;width:13%;height:30%;border-radius:40% 40% .6em .6em;background:linear-gradient(180deg,#B9C1AC,#97A28A)}
+.sl-vase::before,.sl-vase::after{content:"";position:absolute;bottom:92%;width:.14em;height:3.2em;background:#7D876F;border-radius:1em;transform-origin:bottom}
+.sl-vase::before{left:42%;transform:rotate(-14deg)}
+.sl-vase::after{left:52%;height:2.6em;transform:rotate(18deg)}
+.sl-leaf{position:absolute;width:.9em;height:.42em;border-radius:100% 0;background:#A2AD94}
+.sl-hero-t{position:absolute;left:1em;bottom:.85em;font-family:"Lora",Georgia,serif;font-weight:600;font-size:1.42em;line-height:1.08;max-width:55%}
+.sl-hero-t small{display:block;margin-top:.35em;font-family:var(--font-text);font-weight:400;font-size:.58em;color:#6E5A54}
+.sl-next{flex:none;margin:1em 1.4em 0;padding:.9em 1em 1em;border-radius:1em;background:var(--s-white);box-shadow:0 .4em 1.4em -.8em rgba(46,35,32,.35)}
+.sl-next-t{font-weight:700;font-size:.95em}
+.sl-slots{display:flex;gap:.5em;margin-top:.65em}
+.sl-slots button{flex:1;display:grid;gap:.18em;padding:.6em .75em;border:0;border-radius:.75em;background:var(--s-bg);color:var(--s-ink);text-align:left;font:inherit;font-size:.92em;line-height:1.2;cursor:pointer;transition:background-color .25s,color .25s}
+.sl-slots button span{color:var(--s-mute);font-size:.86em;transition:color .25s}
+.sl-slots button.on{background:var(--s-rose);color:#FFFFFF}
+.sl-slots button.on span{color:rgba(255,255,255,.85)}
+.sl-tabs{position:relative;flex:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.25em;margin:1.1em 1.4em .35em;padding:.28em;border-radius:999px;background:#EEE3D8}
+.sl-thumb{position:absolute;top:.28em;bottom:.28em;left:.28em;width:calc((100% - 1.06em) / 3);border-radius:999px;background:var(--s-white);box-shadow:0 .2em .6em -.3em rgba(46,35,32,.4);translate:calc(var(--i,0) * (100% + .25em)) 0;transition:translate .45s cubic-bezier(.3,.75,.2,1)}
+.sl-tabs button{position:relative;z-index:1;padding:.62em 0;border:0;border-radius:999px;background:transparent;color:var(--s-mute);font:inherit;font-size:.95em;cursor:pointer;transition:color .3s}
+.sl-tabs button[aria-pressed="true"]{color:var(--s-ink);font-weight:600}
+.sl-tabs button:focus-visible{outline:2px solid var(--s-rose);outline-offset:2px}
+.sl-list{padding:0 1.4em 6em}
+.sl-list li{display:flex;justify-content:space-between;align-items:flex-start;gap:1em;padding:.8em 0;box-shadow:inset 0 -1px 0 var(--s-line);transition:opacity .25s}
+.sl-list b{display:block;font-weight:600}
+.sl-list em{display:inline-block;margin-top:.15em;font-style:normal;color:var(--s-mute);font-size:.9em}
+.sl-list strong{font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
+.sl-list.is-swap li{opacity:0}
+.sl-cta{position:absolute;left:1.4em;right:1.4em;bottom:1.7em;z-index:3;padding:1em;border-radius:999px;background:var(--s-ink);color:#FFFFFF;text-align:center;font-weight:700;box-shadow:0 .9em 1.8em -.8em rgba(46,35,32,.7)}
+.sl-cta b{font-weight:400;opacity:.75}
+.mock .sl .sl-cta{position:absolute}
+.mock .sl-tabs > .pin{top:-12px;right:-8px}
+.sl-bhead{display:flex;align-items:center;gap:.8em;padding:4em 1.4em .8em;font-weight:700;font-size:1.12em}
+.sl-back{width:.62em;height:.62em;margin-left:.2em;border-left:.15em solid currentColor;border-bottom:.15em solid currentColor;transform:rotate(45deg)}
+.sl-steps{display:flex;gap:.45em;padding:0 1.4em;font-size:.8em;color:var(--s-mute)}
+.sl-steps li{flex:1;padding-top:.6em;box-shadow:inset 0 .22em 0 var(--s-line)}
+.sl-steps li.done{color:var(--s-ink);box-shadow:inset 0 .22em 0 var(--s-ink)}
+.sl-steps li.on{color:var(--s-ink);font-weight:600;box-shadow:inset 0 .22em 0 var(--s-rose)}
+.sl-svc{margin:1em 1.4em 0;padding:.75em 1em;border-radius:.9em;background:var(--s-white);font-size:.92em;box-shadow:inset 0 0 0 1px var(--s-line)}
+.sl-svc b{display:block;font-weight:600}
+.sl-svc span{color:var(--s-mute)}
+.sl-sec{margin:1.05em 1.4em .5em;font-weight:700;font-size:.95em}
+.sl-masters{display:grid;gap:.5em;padding:0 1.4em}
+.sl-m{display:grid;grid-template-columns:2.6em minmax(0,1fr) auto;align-items:center;gap:.75em;padding:.6em .75em;border-radius:.9em;background:var(--s-white);box-shadow:inset 0 0 0 1px var(--s-line)}
+.sl-m.on{box-shadow:inset 0 0 0 .14em var(--s-rose)}
+.sl-av{display:grid;place-items:center;width:2.6em;height:2.6em;border-radius:50%;background:linear-gradient(135deg,#EECFC7,#C98386);color:#FFFFFF;font-family:"Lora",Georgia,serif;font-weight:600;font-size:1em}
+.sl-av--2{background:linear-gradient(135deg,#DCE2D2,#97A28A)}
+.sl-m b{display:block;font-weight:600}
+.sl-m small{color:var(--s-mute);font-size:.84em}
+.sl-m i{font-style:normal;font-weight:600;font-size:.9em;white-space:nowrap}
+.sl-days{display:flex;gap:.4em;padding:0 1.4em}
+.sl-days span{flex:1;display:grid;place-items:center;gap:.1em;padding:.45em 0;border-radius:.7em;background:var(--s-white);box-shadow:inset 0 0 0 1px var(--s-line);font-size:.78em;color:var(--s-mute)}
+.sl-days span b{font-size:1.3em;color:var(--s-ink)}
+.sl-days span.on{background:var(--s-ink);color:rgba(255,255,255,.75);box-shadow:none}
+.sl-days span.on b{color:#FFFFFF}
+.sl-times{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.45em;padding:.55em 1.4em 6em}
+.sl-times span{padding:.62em 0;border-radius:.65em;background:var(--s-white);box-shadow:inset 0 0 0 1px var(--s-line);text-align:center;font-size:.92em;font-variant-numeric:tabular-nums}
+.sl-times span.off{background:transparent;color:#C9BDB5;text-decoration:line-through;box-shadow:none}
+.sl-times span.on{background:var(--s-rose);color:#FFFFFF;box-shadow:none;font-weight:600}
+.stage--salon{align-items:flex-start}
+.stage--salon .phone figcaption{margin-top:16px;text-align:center;color:#C9B9B4;font-size:14px}
+@media (max-width:599px){
+  .stage--salon{flex-wrap:nowrap;justify-content:flex-start;gap:16px;padding-inline:20px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:20px;overscroll-behavior-x:contain;scrollbar-width:none}
+  .stage--salon::-webkit-scrollbar{display:none}
+  .stage--salon > *{scroll-snap-align:start}
+  .stage--salon .phone{--w:236px}
+  .stage--salon .tile{width:236px}
+}
+@media (min-width:900px){.stage--salon{gap:56px}.stage--salon .phone:nth-child(2){margin-top:72px}}
+</style>
+<!--body-->
+<div class="page" id="top" lang="ru">
+<canvas id="space" aria-hidden="true"></canvas>
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#top">Пётр Кавалдин</a>
+    <nav class="nav" aria-label="Разделы">
+      <a href="#work">Работы</a>
+      <a href="#about">Обо мне</a>
+      <a href="#approach">Как работаю</a>
+      <a href="#prices">Цены</a>
+      <a href="#contact">Контакты</a>
+      <a href="game.html">Игра</a>
+      <span class="nav-ink" aria-hidden="true"></span>
+    </nav>
+    <button class="top-cta" type="button" data-brief>Обсудить сайт</button>
+  </div>
+</header>
+
+<main>
+<div class="hello" id="hello" hidden>
+  <div class="wrap">
+    <div class="hello-box">
+      <p class="hello-t"><b id="helloName"></b><span id="helloText"></span></p>
+      <div class="hello-act"><a class="hello-go" id="helloGo" href="#work">Смотреть концепт</a><button type="button" class="hello-talk" data-brief>Обсудить сайт</button></div>
+    </div>
+  </div>
+</div>
+<section class="hero" id="intro">
+  <div class="wrap grid hero-grid">
+    <h1 class="display hero-h"><span class="ln"><span style="--i:0">Сайты</span></span> <span class="ln"><span style="--i:1">для автосервисов,</span></span> <span class="ln"><span style="--i:2">детейлинга</span></span> <span class="ln"><span style="--i:3">и салонов красоты</span></span></h1>
+    <div class="hero-side">
+      <p class="lead">Проектирую, верстаю и запускаю. Работаю один, поэтому задачу вы обсуждаете с тем, кто делает сайт.</p>
+      <dl class="facts">
+        <div><dt>Ещё делаю</dt><dd>Telegram-боты и мини-приложения с оплатой</dd></div>
+        <div><dt>Оформление</dt><dd>Самозанятый, чек на каждую оплату</dd></div>
+        <div><dt>Почта</dt><dd>kavaldinpetr@gmail.com</dd></div>
+        <div><dt>Telegram</dt><dd><a href="https://t.me/petrk_av" target="_blank" rel="noopener">@petrk_av</a></dd></div>
+      </dl>
+      <div class="hero-ctas">
+        <a class="play-cta" href="game.html">Объехать проекты на джипе<small>3D-игра прямо в браузере</small></a>
+        <button class="talk-cta" type="button" data-brief>Обсудить сайт<small>Три вопроса и Telegram</small></button>
+      </div>
+    </div>
+    <div class="play" aria-hidden="true">
+      <span class="hint" style="--x:51%;--y:2.5%;--xm:2%;--ym:74%"><span class="av">П</span>Потаскайте детали и кликните по звёздам</span>
+      <div class="frag" style="--x:29%;--y:7%;--xm:2%;--ym:6%;--r:-3deg;--depth:.6;--dur:7s;--del:-2s"><div class="frag__par"><div class="frag__float"><span class="fu fu-renew">Продлить · 199 ₽</span><span class="sel"><i></i><i></i><i></i><i></i><b class="sel__size"></b></span></div></div></div>
+      <div class="frag" style="--x:45%;--y:2%;--xm:60%;--ym:3%;--r:7deg;--depth:1.3;--dur:5.5s;--del:-1s"><div class="frag__par"><div class="frag__float"><span class="fu fu-chip">−17%</span><span class="sel"><i></i><i></i><i></i><i></i><b class="sel__size"></b></span></div></div></div>
+      <div class="frag" style="--x:79%;--y:2%;--xm:44%;--ym:36%;--r:2deg;--depth:.9;--dur:8s;--del:-3s"><div class="frag__par"><div class="frag__float"><span class="fu fu-status"><i></i>Защита активна</span><span class="sel"><i></i><i></i><i></i><i></i><b class="sel__size"></b></span></div></div></div>
+      <div class="frag frag--d" style="--x:66%;--y:13%;--xm:0%;--ym:0%;--r:-2deg;--depth:.5;--dur:9s;--del:-4s"><div class="frag__par"><div class="frag__float"><span class="fu fu-slots"><b>Сегодня свободно</b><span class="t"><span>12:30</span><span class="on">15:00</span><span>17:30</span></span></span><span class="sel"><i></i><i></i><i></i><i></i><b class="sel__size"></b></span></div></div></div>
+      <div class="frag frag--f" style="--x:46.5%;--y:55%;--xm:52%;--ym:66%;--r:-1.5deg;--depth:.8;--dur:6.5s;--del:-2.5s"><div class="frag__par"><div class="frag__float"><span class="fu fu-seg"><span class="th"></span><span data-i="0" class="on">Седан</span><span data-i="1">Кроссовер</span><span data-i="2">Внедорожник</span></span><span class="sel"><i></i><i></i><i></i><i></i><b class="sel__size"></b></span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="work" id="work" aria-labelledby="work-h">
+  <div class="wrap">
+    <div class="sec-head grid">
+      <h2 class="display" id="work-h">Работы</h2>
+      <p>Цифрами на макетах отмечены решения, о которых написано рядом. Наведите на пункт или нажмите на него, чтобы подсветить место на макете.</p>
+    </div>
+  </div>
+
+  <!-- case: STEOVPN -->
+  <article class="case case--wide" aria-labelledby="c1">
+    <div class="wrap">
+      <div class="case-head grid">
+        <div class="case-title">
+          <h3 class="display" id="c1">STEOVPN</h3>
+          <p class="case-sub">Telegram-бот и мини-приложение VPN-сервиса</p>
+          <p class="case-text">Сделал сервис целиком. Бот продаёт подписку, принимает оплату картой, через СБП и криптовалютой и сразу выдаёт ключ. В мини-приложении внутри Telegram собран личный кабинет: статус защиты, тарифы, докупка трафика и рефералы.</p>
+        </div>
+        <dl class="meta">
+          <div><dt>Год</dt><dd>2026</dd></div>
+          <div><dt>Тип</dt><dd>Свой продукт</dd></div>
+          <div><dt>Роль</dt><dd>Дизайн, разработка, запуск</dd></div>
+          <div><dt>Стек</dt><dd>Python, aiogram, ЮKassa, CryptoBot, Remnawave</dd></div>
+          <div><dt>Ещё в проекте</dt><dd>Реферальная программа, промокоды, админ-панель, бот поддержки, канал новостей</dd></div>
+        </dl>
+      </div>
+      <div class="case-body grid">
+        <div class="stage stage--vpn">
+          <figure class="phone mock phone--shot">
+            <div class="phone__body"><div class="phone__screen">
+              <img src="{{IMG_HOME}}" width="720" height="1561" decoding="async" alt="Главный экран мини-приложения STEOVPN: защита активна, тариф Lite, осталось 46 дней, кнопка «Продлить подписку»">
+              <span class="hot" data-note="1" aria-hidden="true" style="--l:8.4%;--t:46.9%;--w:83.2%;--h:30.2%"><span class="pin">1</span></span>
+            </div></div>
+            <figcaption>Главная</figcaption>
+          </figure>
+          <figure class="phone mock phone--shot">
+            <div class="phone__body"><div class="phone__screen">
+              <img src="{{IMG_TARIFFS}}" width="720" height="1561" decoding="async" alt="Экран тарифов STEOVPN: докупка 100 ГБ трафика за 120 ₽, тариф Lite, сроки от месяца до года со скидками и кнопка «Продлить · 199 ₽»">
+              <span class="hot" data-note="2" aria-hidden="true" style="--l:4.4%;--t:29.6%;--w:91%;--h:5.3%"></span>
+              <span class="hot" data-note="2" aria-hidden="true" style="--l:8.3%;--t:53%;--w:53.5%;--h:3%"><span class="pin pin--after">2</span></span>
+              <span class="hot" data-note="3" aria-hidden="true" style="--l:4.1%;--t:36.8%;--w:91.8%;--h:9.5%"><span class="pin pin--tc">3</span></span>
+              <span class="hot" data-note="4" aria-hidden="true" style="--l:8.6%;--t:62.2%;--w:82.6%;--h:24.4%"><span class="pin pin--tc">4</span></span>
+            </div></div>
+            <figcaption>Тарифы</figcaption>
+          </figure>
+          <figure class="tile">
+            <figcaption>Палитра «Ночь и золото»</figcaption>
+            <div class="chips">
+              <div class="chip" style="--f:6;--c:linear-gradient(180deg,#0F2149,#050C1F);--t:#E9EEFA"><span>Ночь</span><span>#0F2149 → #050C1F</span></div>
+              <div class="chip" style="--f:1.5;--c:#FFFFFF;--t:#0B1A3B"><span>Текст</span><span>#FFFFFF</span></div>
+              <div class="chip" style="--f:1.1;--c:#F2C568;--t:#2A1E05"><span>Золото</span><span>#F2C568</span></div>
+              <div class="chip" style="--f:.9;--c:#45E4A4;--t:#04281A"><span>Мята</span><span>#45E4A4</span></div>
+            </div>
+            <p class="tile-note">Высота полос показывает, сколько места цвет занимает в интерфейсе. Мятный только для статуса и скидок.</p>
+          </figure>
+        </div>
+        <ol class="notes" aria-label="Пометки к экранам STEOVPN">
+          <li data-note="1" tabindex="0"><span class="pin" aria-hidden="true">1</span><p>На главном экране сразу видно, что защита включена, какой тариф и сколько дней осталось. Продлить можно отсюда же.</p></li>
+          <li data-note="2" tabindex="0"><span class="pin" aria-hidden="true">2</span><p>Тариф описан задачами, без обещаний скорости: «Сайты, соцсети и мессенджеры». Все локации есть в каждом тарифе.</p></li>
+          <li data-note="3" tabindex="0"><span class="pin" aria-hidden="true">3</span><p>Если трафик кончился, можно докупить 100 ГБ до конца месяца за 120 ₽, тариф менять не нужно.</p></li>
+          <li data-note="4" tabindex="0"><span class="pin" aria-hidden="true">4</span><p>Скидки за 3, 6 и 12 месяцев видны прямо на плитках, а на кнопке написана сумма к оплате.</p></li>
+        </ol>
+      </div>
+    </div>
+  </article>
+
+  <!-- case: auto service concept -->
+  <article class="case case--wide" aria-labelledby="c2">
+    <div class="wrap">
+      <div class="case-head grid">
+        <div class="case-title">
+          <h3 class="display" id="c2">Ключ на 10</h3>
+          <p class="case-sub">Концепт сайта автосервиса</p>
+          <p class="case-text">Такие концепты я делаю по своей инициативе и отправляю владельцам автосервисов вместе с предложением. Главная отвечает на три вопроса клиента: сколько стоит ремонт, когда примут машину и как заехать.</p>
+        </div>
+        <dl class="meta">
+          <div><dt>Год</dt><dd>2026</dd></div>
+          <div><dt>Тип</dt><dd>Концепт по своей инициативе</dd></div>
+          <div><dt>Сделано</dt><dd>Структура, дизайн главной, мобильная версия</dd></div>
+        </dl>
+      </div>
+      <div class="case-body grid">
+        <div class="stage stage--auto">
+          <div class="browser mock" role="img" aria-label="Главная страница автосервиса «Ключ на 10» на компьютере: телефон и запись в шапке, свободное время на сегодня, цены на частые работы и схема въезда">
+            <div class="browser__bar"><i></i><i></i><i></i><span class="browser__url">ключна10.рф</span></div>
+            <div class="site a">
+              <div class="a-head">
+                <span class="a-logo"><b>10</b>Ключ на 10</span>
+                <span class="a-nav"><span>Услуги</span><span>Цены</span><span>Как заехать</span></span>
+                <span class="a-call" data-note="1"><span class="pin" aria-hidden="true">1</span><span class="a-phone">+7 495 000-00-00</span><span class="a-btn">Записаться</span></span>
+              </div>
+              <div class="a-hero">
+                <div>
+                  <div class="a-h1">Ремонт и обслуживание иномарок</div>
+                  <p class="a-lead">Гарантия на работы 6 месяцев. Запчасти можно привезти свои.</p>
+                  <div class="a-actions"><span class="a-btn">Записаться на ремонт</span><span class="a-btn a-btn--line">Позвонить</span></div>
+                </div>
+                <div class="a-slots" data-note="3"><span class="pin" aria-hidden="true">3</span>
+                  <div class="a-slots-t">Сегодня свободно</div>
+                  <div class="a-slots-s">Примем машину без записи за неделю</div>
+                  <div class="a-times"><span>12:30</span><span class="on">15:00</span><span>17:30</span></div>
+                </div>
+              </div>
+              <div class="a-prices" data-note="2"><span class="pin" aria-hidden="true">2</span>
+                <div class="a-price"><b>Замена масла</b><span>30 минут</span><strong>от 900 ₽</strong></div>
+                <div class="a-price"><b>Колодки, одна ось</b><span>40 минут</span><strong>от 1&nbsp;200 ₽</strong></div>
+                <div class="a-price"><b>Диагностика подвески</b><span>20 минут</span><strong>0 ₽ при ремонте</strong></div>
+                <div class="a-price"><b>Шиномонтаж R16</b><span>40 минут</span><strong>от 2&nbsp;000 ₽</strong></div>
+              </div>
+              <div class="a-route" data-note="4"><span class="pin" aria-hidden="true">4</span>
+                <span class="a-map"><svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="160" height="90" fill="#E3E6EA"/><rect x="8" y="8" width="38" height="40" rx="2" fill="#D2D6DC"/><rect x="62" y="10" width="44" height="38" rx="2" fill="#D2D6DC"/><rect x="122" y="8" width="32" height="40" rx="2" fill="#D2D6DC"/><rect x="62" y="70" width="92" height="16" rx="2" fill="#D2D6DC"/><path d="M0 59H160" stroke="#FFFFFF" stroke-width="10"/><path d="M54 0V90" stroke="#FFFFFF" stroke-width="7"/><path d="M114 0V59" stroke="#FFFFFF" stroke-width="5"/><path d="M6 59H114V32" fill="none" stroke="#FF5B1A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="0.5 5"/><circle cx="114" cy="27" r="5.5" fill="#FF5B1A" stroke="#FFFFFF" stroke-width="2"/></svg></span>
+                <div><div class="a-route-t">Как заехать</div><p>Въезд с улицы Складской, ворота №3 с синим шлагбаумом. Навигатор ведёт к главному входу, там проезда нет.</p></div>
+              </div>
+            </div>
+          </div>
+          <div class="phone mock" role="img" aria-label="Мобильная версия того же сайта: кнопки звонка и записи закреплены внизу экрана">
+            <div class="phone__body"><div class="phone__screen a">
+              <div class="am-head"><span class="a-logo"><b>10</b>Ключ на 10</span><span class="am-burger"></span></div>
+              <div class="am-main">
+                <div class="am-h1">Ремонт и обслуживание иномарок</div>
+                <div class="am-slots" data-note="3"><span class="pin" aria-hidden="true">3</span><span>Сегодня свободно</span><span class="a-times"><span>12:30</span><span class="on">15:00</span><span>17:30</span></span></div>
+                <div class="am-prices" data-note="2"><span class="pin" aria-hidden="true">2</span>
+                  <p class="am-sec">Цены</p>
+                  <div><span>Замена масла</span><b>от 900 ₽</b></div>
+                  <div><span>Колодки, ось</span><b>от 1&nbsp;200 ₽</b></div>
+                  <div><span>Диагностика</span><b>0 ₽ при ремонте</b></div>
+                </div>
+                <div class="am-route" data-note="4"><span class="pin" aria-hidden="true">4</span>
+                  <span class="a-map"><svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="160" height="90" fill="#E3E6EA"/><rect x="8" y="8" width="38" height="40" rx="2" fill="#D2D6DC"/><rect x="62" y="10" width="44" height="38" rx="2" fill="#D2D6DC"/><rect x="122" y="8" width="32" height="40" rx="2" fill="#D2D6DC"/><path d="M0 59H160" stroke="#FFFFFF" stroke-width="10"/><path d="M54 0V90" stroke="#FFFFFF" stroke-width="7"/><path d="M114 0V59" stroke="#FFFFFF" stroke-width="5"/><path d="M6 59H114V32" fill="none" stroke="#FF5B1A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="0.5 5"/><circle cx="114" cy="27" r="5.5" fill="#FF5B1A" stroke="#FFFFFF" stroke-width="2"/></svg></span>
+                  <span>Ворота №3, синий шлагбаум</span>
+                </div>
+              </div>
+              <div class="am-bar" data-note="1"><span class="pin pin--top" aria-hidden="true">1</span><span class="a-btn">Позвонить</span><span class="a-btn a-btn--dark">Записаться</span></div>
+            </div></div>
+          </div>
+        </div>
+        <ol class="notes" aria-label="Пометки к концепту автосервиса">
+          <li data-note="1" tabindex="0"><span class="pin" aria-hidden="true">1</span><p>Номер и кнопка записи видны на любом экране. На телефоне они закреплены внизу, под большим пальцем.</p></li>
+          <li data-note="2" tabindex="0"><span class="pin" aria-hidden="true">2</span><p>Цены на частые работы прямо на главной: масло, колодки, диагностика. Без «уточняйте по телефону».</p></li>
+          <li data-note="3" tabindex="0"><span class="pin" aria-hidden="true">3</span><p>Свободное время на сегодня. Сразу видно, что машину примут без записи за неделю.</p></li>
+          <li data-note="4" tabindex="0"><span class="pin" aria-hidden="true">4</span><p>Схема въезда и ориентир. В промзонах навигатор часто приводит не к тем воротам.</p></li>
+        </ol>
+      </div>
+    </div>
+  </article>
+
+  <!-- case: detailing concept -->
+  <article class="case" aria-labelledby="c3">
+    <div class="wrap">
+      <div class="case-head grid">
+        <div class="case-title">
+          <h3 class="display" id="c3">Слой</h3>
+          <p class="case-sub">Концепт мобильного сайта студии детейлинга</p>
+          <p class="case-text">Детейлинг продают результатом, поэтому сайт начинается со сравнения до и после. Стоимость зависит от класса машины, и её можно посчитать прямо на странице. Переключите кузов на макете, и цены поменяются.</p>
+        </div>
+        <dl class="meta">
+          <div><dt>Год</dt><dd>2026</dd></div>
+          <div><dt>Тип</dt><dd>Концепт по своей инициативе</dd></div>
+          <div><dt>Сделано</dt><dd>Мобильная версия, калькулятор стоимости</dd></div>
+        </dl>
+      </div>
+      <div class="case-body grid">
+        <div class="stage stage--dt">
+          <div class="phone mock" role="group" aria-label="Макет мобильного сайта студии детейлинга «Слой»">
+            <div class="phone__body"><div class="phone__screen dt" id="dt">
+              <div class="dt-head"><span class="dt-logo">Слой</span><span class="dt-kind">детейлинг</span><span class="dt-menu" aria-hidden="true"></span></div>
+              <div class="dt-ba" data-note="1"><span class="pin pin--in" aria-hidden="true">1</span>
+                <div class="dt-after" aria-hidden="true"></div>
+                <div class="dt-before" aria-hidden="true"></div>
+                <span class="dt-tag dt-tag--l" aria-hidden="true">до</span><span class="dt-tag dt-tag--r" aria-hidden="true">после</span>
+                <span class="dt-handle" aria-hidden="true"></span>
+                <input type="range" id="dtRange" min="6" max="94" value="54" aria-label="Сравнить капот до и после полировки">
+              </div>
+              <div class="dt-title">Полировка, керамика и плёнка</div>
+              <div class="dt-seg" role="group" aria-label="Класс машины" data-note="2"><span class="pin" aria-hidden="true">2</span><span class="dt-thumb" aria-hidden="true"></span>
+                <button type="button" aria-pressed="true" data-k="1">Седан</button>
+                <button type="button" aria-pressed="false" data-k="1.2">Кроссовер</button>
+                <button type="button" aria-pressed="false" data-k="1.4">Внедорожник</button>
+              </div>
+              <ul class="dt-list" aria-live="polite">
+                <li><span><b>Полировка в два этапа</b><em data-note="3">2 дня<span class="pin pin--after" aria-hidden="true">3</span></em></span><strong data-base="18000">18&nbsp;000 ₽</strong></li>
+                <li><span><b>Керамика, два слоя</b><em>2 дня</em></span><strong data-base="26000">26&nbsp;000 ₽</strong></li>
+                <li><span><b>Плёнка на капот и фары</b><em>1 день</em></span><strong data-base="22000">22&nbsp;000 ₽</strong></li>
+              </ul>
+              <span class="dt-cta" data-note="4"><span class="pin" aria-hidden="true">4</span>Записаться в Telegram</span>
+            </div></div>
+          </div>
+          <figure class="tile mock" data-note="2"><span class="pin" aria-hidden="true">2</span>
+            <figcaption>Как считается цена</figcaption>
+            <p class="f-eq">Базовая цена работы × коэффициент кузова</p>
+            <dl class="f-k" id="fk">
+              <div class="on"><dt>Седан</dt><dd>×1,0</dd></div>
+              <div><dt>Кроссовер</dt><dd>×1,2</dd></div>
+              <div><dt>Внедорожник</dt><dd>×1,4</dd></div>
+            </dl>
+            <p class="tile-note">Владелец меняет одну базовую цену, остальные пересчитываются сами.</p>
+          </figure>
+        </div>
+        <ol class="notes" aria-label="Пометки к концепту студии детейлинга">
+          <li data-note="1" tabindex="0"><span class="pin" aria-hidden="true">1</span><p>На первом экране сравнение до и после. Ползунок можно двигать.</p></li>
+          <li data-note="2" tabindex="0"><span class="pin" aria-hidden="true">2</span><p>Цена считается по классу кузова: седан, кроссовер или внедорожник. Ждать ответа менеджера не нужно.</p></li>
+          <li data-note="3" tabindex="0"><span class="pin" aria-hidden="true">3</span><p>Рядом с ценой написано, на сколько дней машина останется в студии.</p></li>
+          <li data-note="4" tabindex="0"><span class="pin" aria-hidden="true">4</span><p>Запись ведёт в Telegram: в детейлинг чаще пишут, чем звонят.</p></li>
+        </ol>
+      </div>
+    </div>
+  </article>
+
+  <!-- case: beauty salon concept -->
+  <article class="case case--wide" aria-labelledby="c4">
+    <div class="wrap">
+      <div class="case-head grid">
+        <div class="case-title">
+          <h3 class="display" id="c4">Миндаль</h3>
+          <p class="case-sub">Концепт мобильного сайта салона красоты</p>
+          <p class="case-text">В салон почти всегда приходят с телефона, из карт и соцсетей. Поэтому первым делом сайт показывает ближайшее свободное время, цены вместе с длительностью и запись к конкретному мастеру без звонка администратору. Переключите услуги на макете, и прайс поменяется.</p>
+        </div>
+        <dl class="meta">
+          <div><dt>Год</dt><dd>2026</dd></div>
+          <div><dt>Тип</dt><dd>Концепт по своей инициативе</dd></div>
+          <div><dt>Сделано</dt><dd>Мобильная версия, онлайн-запись</dd></div>
+        </dl>
+      </div>
+      <div class="case-body grid">
+        <div class="stage stage--salon">
+          <figure class="phone mock" role="group" aria-label="Главная мобильного сайта салона «Миндаль»: ближайшее свободное время, услуги с ценами и кнопка записи">
+            <div class="phone__body"><div class="phone__screen sl" id="sl">
+              <div class="sl-head"><span class="sl-logo">Миндаль</span><span class="sl-kind">салон красоты</span><span class="sl-menu" aria-hidden="true"></span></div>
+              <div class="sl-hero" aria-hidden="true">
+                <span class="sl-arch"></span><span class="sl-vase"></span>
+                <span class="sl-leaf" style="left:74.5%;bottom:47%;transform:rotate(-30deg)"></span><span class="sl-leaf" style="left:82%;bottom:52%;transform:rotate(25deg)"></span><span class="sl-leaf" style="left:76%;bottom:38%;transform:rotate(-55deg)"></span>
+                <span class="sl-hero-t">Ногти, брови и&nbsp;волосы<small>5 минут от метро, без выходных</small></span>
+              </div>
+              <div class="sl-next" data-note="1"><span class="pin" aria-hidden="true">1</span>
+                <div class="sl-next-t">Ближайшее свободное время</div>
+                <div class="sl-slots"><button type="button" class="on"><b>Сегодня 16:30</b><span>Анна, ногти</span></button><button type="button"><b>Завтра 11:00</b><span>Вера, брови</span></button></div>
+              </div>
+              <div class="sl-tabs" role="group" aria-label="Услуги" data-note="2"><span class="pin pin--top" aria-hidden="true">2</span><span class="sl-thumb" aria-hidden="true"></span>
+                <button type="button" aria-pressed="true">Ногти</button>
+                <button type="button" aria-pressed="false">Брови</button>
+                <button type="button" aria-pressed="false">Волосы</button>
+              </div>
+              <ul class="sl-list" aria-live="polite">
+                <li><span><b>Маникюр с покрытием</b><em>1 ч 30 мин</em></span><strong>2&nbsp;200 ₽</strong></li>
+                <li><span><b>Снятие и маникюр</b><em>1 ч 45 мин</em></span><strong>2&nbsp;500 ₽</strong></li>
+                <li><span><b>Педикюр с покрытием</b><em>2 ч</em></span><strong>3&nbsp;000 ₽</strong></li>
+              </ul>
+              <span class="sl-cta" data-note="4"><span class="pin" aria-hidden="true">4</span>Записаться онлайн</span>
+            </div></div>
+            <figcaption>Главная</figcaption>
+          </figure>
+          <figure class="phone mock" role="img" aria-label="Шаг записи в салон: выбор мастера, дня и времени">
+            <div class="phone__body"><div class="phone__screen sl">
+              <div class="sl-bhead"><span class="sl-back" aria-hidden="true"></span>Запись</div>
+              <ol class="sl-steps"><li class="done">Услуга</li><li class="on">Мастер и время</li><li>Готово</li></ol>
+              <div class="sl-svc"><b>Маникюр с покрытием</b><span>1 ч 30 мин · 2&nbsp;200 ₽</span></div>
+              <p class="sl-sec">Мастер</p>
+              <div class="sl-masters" data-note="3"><span class="pin pin--tc" aria-hidden="true">3</span>
+                <div class="sl-m on"><span class="sl-av">А</span><span><b>Анна</b><small>стаж 6 лет</small></span><i>★ 4,9</i></div>
+                <div class="sl-m"><span class="sl-av sl-av--2">Е</span><span><b>Ева</b><small>стаж 3 года</small></span><i>★ 4,8</i></div>
+              </div>
+              <p class="sl-sec">Время</p>
+              <div class="sl-days"><span>пн<b>20</b></span><span class="on">вт<b>21</b></span><span>ср<b>22</b></span><span>чт<b>23</b></span><span>пт<b>24</b></span></div>
+              <div class="sl-times"><span class="off">10:00</span><span>11:30</span><span class="off">13:00</span><span class="on">14:30</span><span>16:30</span><span>18:00</span></div>
+              <span class="sl-cta" data-note="4"><span class="pin pin--top" aria-hidden="true">4</span>Записаться на 14:30</span>
+            </div></div>
+            <figcaption>Запись</figcaption>
+          </figure>
+          <figure class="tile">
+            <figcaption>Палитра «Миндаль»</figcaption>
+            <div class="chips">
+              <div class="chip" style="--f:6;--c:#F7F1EA;--t:#2E2320"><span>Сливки</span><span>#F7F1EA</span></div>
+              <div class="chip" style="--f:1.6;--c:#2E2320;--t:#F7F1EA"><span>Какао</span><span>#2E2320</span></div>
+              <div class="chip" style="--f:1.1;--c:#C98386;--t:#FFFFFF"><span>Роза</span><span>#C98386</span></div>
+              <div class="chip" style="--f:.9;--c:#A2AD94;--t:#1F2619"><span>Шалфей</span><span>#A2AD94</span></div>
+            </div>
+            <p class="tile-note">Тёплый светлый фон и один акцент: розовым выделены только свободное время и выбранный слот.</p>
+          </figure>
+        </div>
+        <ol class="notes" aria-label="Пометки к концепту салона красоты">
+          <li data-note="1" tabindex="0"><span class="pin" aria-hidden="true">1</span><p>Ближайшее свободное время на первом экране. Записаться можно в два нажатия, без звонка.</p></li>
+          <li data-note="2" tabindex="0"><span class="pin" aria-hidden="true">2</span><p>Услуги разбиты по направлениям, у каждой видны длительность и цена. Вкладки на макете переключаются.</p></li>
+          <li data-note="3" tabindex="0"><span class="pin" aria-hidden="true">3</span><p>В салон часто приходят к своему мастеру, поэтому рядом с именем стаж и рейтинг.</p></li>
+          <li data-note="4" tabindex="0"><span class="pin" aria-hidden="true">4</span><p>Запись в три шага без регистрации: услуга, мастер и время, подтверждение. Кнопка всегда под большим пальцем.</p></li>
+        </ol>
+      </div>
+    </div>
+  </article>
+
+  <div class="more">
+    <div class="wrap">
+      <div class="more-head"><h3 class="display">Ещё</h3></div>
+      <ul class="more-list">
+        <li class="grid"><span class="more-name">SProxy | MTProto</span><p class="more-desc">Telegram-бот, который продаёт прокси для Telegram по подписке. Один тариф за 120 ₽ в месяц, оплата через ЮKassa и криптовалютой. У проекта свой канал новостей.</p><span class="more-year">2026</span></li>
+        <li class="grid"><span class="more-name">Концепты для бизнеса в Москве</span><p class="more-desc">Четыре концепта сайтов: три для автосервисов и один для студии детейлинга. Отправил владельцам вместе с коммерческим предложением.</p><span class="more-year">2026</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="sec about" id="about" aria-labelledby="about-h">
+  <div class="wrap">
+    <div class="grid about-grid">
+      <h2 class="display" id="about-h">Обо мне</h2>
+      <div class="about-text">
+        <p class="big">Начинал со своих продуктов. Сделал VPN-сервис в Telegram с оплатой, личным кабинетом и поддержкой, потом бот для продажи прокси.</p>
+        <p>Сейчас делаю сайты для локального бизнеса. Клиентов ищу сам: нахожу на картах сервисы без сайта или со старым сайтом и присылаю владельцу концепт главной страницы. Так понятно, что получится, ещё до разговора о деньгах.</p>
+        <p>Работаю как самозанятый, на каждую оплату выдаю чек.</p>
+      </div>
+    </div>
+    <div class="grid svc">
+      <h3 class="display">Чем могу помочь</h3>
+      <ul class="svc-list">
+        <li><b>Сайт для сервиса</b><p>Главная, услуги и цены, запись, схема проезда. Для автосервисов, студий детейлинга и салонов красоты.</p></li>
+        <li><b>Новый дизайн старого сайта</b><p>Если сайт есть, а заявок с него мало. Пересобираю структуру, первый экран и мобильную версию.</p></li>
+        <li><b>Telegram-бот с оплатой</b><p>Тарифы или каталог, оплата через ЮKassa или криптовалютой, автоматическая выдача доступа и админ-панель.</p></li>
+        <li><b>Мини-приложение в Telegram</b><p>Личный кабинет внутри Telegram, где клиент видит подписку, баланс и историю покупок.</p></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="sec approach" id="approach" aria-labelledby="ap-h">
+  <div class="wrap">
+    <div class="sec-head grid">
+      <h2 class="display" id="ap-h">Как работаю</h2>
+      <p>Точный срок и стоимость называю после первого разговора, когда понятна задача. Стартовые цены — в следующем блоке.</p>
+    </div>
+    <ol class="steps grid">
+      <li><span class="step-n" aria-hidden="true">1</span><b>Знакомство</b><p>Созваниваемся или переписываемся. Разбираюсь, что вы продаёте, кто ваши клиенты и откуда они приходят сейчас.</p></li>
+      <li><span class="step-n" aria-hidden="true">2</span><b>Концепт</b><p>Показываю главную страницу на телефоне и на компьютере. На этом этапе проще всего что-то поменять.</p></li>
+      <li><span class="step-n" aria-hidden="true">3</span><b>Сайт</b><p>Рисую остальные страницы и сразу верстаю. Вы смотрите живой сайт по ссылке и пишете правки по ходу.</p></li>
+      <li><span class="step-n" aria-hidden="true">4</span><b>Запуск</b><p>Подключаю домен и заявки в Telegram или на почту. После запуска остаюсь на связи.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="sec prices" id="prices" aria-labelledby="pr-h">
+  <div class="wrap">
+    <div class="sec-head grid">
+      <h2 class="display" id="pr-h">Сколько стоит</h2>
+      <p>Это стартовые цены. Итоговая сумма зависит от числа страниц и того, что уже готово: тексты, фото, прайс.</p>
+    </div>
+    <ul class="plans grid">
+      <li class="plan">
+        <div class="plan-top"><h3 class="plan-name">Лендинг</h3></div>
+        <p class="plan-price"><span>от</span>15&nbsp;000&nbsp;₽</p>
+        <p class="plan-desc">Одна страница о вашем бизнесе: услуги и цены, отзывы, как доехать, кнопки звонка и записи.</p>
+        <ul class="plan-list"><li>Версии для телефона и компьютера</li><li>Заявки приходят в Telegram или на почту</li><li>Подключаю домен и запускаю</li></ul>
+        <button class="plan-btn" type="button" data-brief data-need="landing">Обсудить лендинг</button>
+      </li>
+      <li class="plan plan--main">
+        <div class="plan-top"><h3 class="plan-name">Сайт с онлайн-записью</h3><span class="plan-tag">для сервисов и салонов</span></div>
+        <p class="plan-price"><span>от</span>30&nbsp;000&nbsp;₽</p>
+        <p class="plan-desc">Несколько страниц и запись на свободное время прямо на сайте, без звонка администратору.</p>
+        <ul class="plan-list"><li>Страницы услуг с ценами и сроками</li><li>Онлайн-запись на свободное время</li><li>Мастера или работы, отзывы, карта</li></ul>
+        <button class="plan-btn" type="button" data-brief data-need="booking">Обсудить сайт</button>
+      </li>
+      <li class="plan">
+        <div class="plan-top"><h3 class="plan-name">Telegram-бот</h3></div>
+        <p class="plan-price"><span>от</span>20&nbsp;000&nbsp;₽</p>
+        <p class="plan-desc">Запись, оплата или подписка прямо в Telegram, где ваши клиенты и так переписываются.</p>
+        <ul class="plan-list"><li>Оплата через ЮKassa или криптовалютой</li><li>Уведомления о новых заявках</li><li>Админ-панель для владельца</li></ul>
+        <button class="plan-btn" type="button" data-brief data-need="bot">Обсудить бота</button>
+      </li>
+    </ul>
+    <p class="plans-note">Работаю как самозанятый, на каждую оплату выдаю чек.</p>
+  </div>
+</section>
+
+<section class="sec contact" id="contact" aria-labelledby="ct-h">
+  <div class="wrap">
+    <div class="grid contact-grid">
+      <h2 class="display" id="ct-h">Расскажите о своём бизнесе</h2>
+      <p class="contact-text">Пришлите ссылку на карточку в картах или на текущий сайт, если он есть. Отвечу, с чего начать и сколько это будет стоить.</p>
+    </div>
+    <div class="talk-row">
+      <button class="talk-big" type="button" data-brief>Обсудить сайт</button>
+      <p>Три вопроса — и откроется Telegram с готовым сообщением</p>
+    </div>
+    <div class="mail">
+      <a class="mail-addr" id="mailAddr" href="mailto:kavaldinpetr@gmail.com">kavaldinpetr<wbr>@gmail.com</a>
+      <div class="mail-row">
+        <button type="button" class="copy" id="copyMail">Скопировать адрес</button>
+        <span class="copy-state" id="copyState" role="status" aria-live="polite"></span>
+      </div>
+      <ul class="links" id="links" hidden></ul>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <span>© 2026 Пётр Кавалдин</span>
+    <button type="button" class="grid-btn" id="gridToggle" aria-pressed="false">Показать сетку</button>
+  </div>
+</footer>
+<button class="fab" id="fab" type="button" data-brief>Обсудить сайт</button>
+<div class="overlay" id="overlay" hidden aria-hidden="true"><div class="wrap grid"><i style="--c:0"></i><i style="--c:1"></i><i style="--c:2"></i><i style="--c:3"></i><i style="--c:4"></i><i style="--c:5"></i><i style="--c:6"></i><i style="--c:7"></i><i style="--c:8"></i><i style="--c:9"></i><i style="--c:10"></i><i style="--c:11"></i></div></div>
+</div>
+
+<script>{{BRIEF_JS}}</script>
+<script>
+(function () {
+  // Контакты: впишите ник и ссылку, и они появятся в блоке «Контакты»
+  var CONTACTS = {
+    telegram: 'petrk_av', // ник в Telegram без @
+    kwork: ''     // ссылка на профиль Kwork
+  };
+  var EMAIL = 'kavaldinpetr@gmail.com';
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var each = function (list, fn) { Array.prototype.forEach.call(list, fn); };
+
+  // Контакты из настроек
+  var links = document.getElementById('links');
+  function addLink(href, text) {
+    var li = document.createElement('li'), a = document.createElement('a');
+    a.href = href; a.target = '_blank'; a.rel = 'noopener'; a.textContent = text;
+    li.appendChild(a); links.appendChild(li);
+  }
+  var tg = (CONTACTS.telegram || '').replace(/^@/, '').trim();
+  if (tg) addLink('https://t.me/' + encodeURIComponent(tg), 'Telegram @' + tg);
+  if ((CONTACTS.kwork || '').trim()) addLink(CONTACTS.kwork.trim(), 'Профиль и отзывы на Kwork');
+  links.hidden = !links.children.length;
+
+  // Копирование почты
+  var copyBtn = document.getElementById('copyMail'), copyState = document.getElementById('copyState'), mailAddr = document.getElementById('mailAddr'), copyTimer;
+  function done(msg, ok) {
+    copyState.textContent = msg;
+    if (ok) { copyBtn.classList.add('is-done'); copyBtn.textContent = 'Скопировано'; }
+    clearTimeout(copyTimer);
+    copyTimer = setTimeout(function () { copyState.textContent = ''; copyBtn.classList.remove('is-done'); copyBtn.textContent = 'Скопировать адрес'; }, 2400);
+  }
+  function selectMail() {
+    var r = document.createRange(); r.selectNodeContents(mailAddr);
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+    done('Адрес выделен, скопируйте его', false);
+  }
+  copyBtn.addEventListener('click', function () {
+    try { navigator.clipboard.writeText(EMAIL).then(function () { done('Адрес скопирован', true); }, selectMail); }
+    catch (e) { selectMail(); }
+  });
+
+  // Шапка: тень при прокрутке и бегунок под текущим разделом
+  var top = document.querySelector('.top');
+  function onScroll() { top.classList.toggle('is-stuck', window.scrollY > 4); }
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  var nav = document.querySelector('.nav'), ink = nav.querySelector('.nav-ink'), navLinks = nav.querySelectorAll('a'), current = null;
+  function setActive(id) {
+    current = id;
+    var hit = null;
+    each(navLinks, function (a) { var on = a.getAttribute('href') === '#' + id; if (on) { a.setAttribute('aria-current', 'true'); hit = a; } else a.removeAttribute('aria-current'); });
+    if (!hit) { ink.classList.remove('on'); return; }
+    ink.style.setProperty('--x', hit.offsetLeft + 'px');
+    ink.style.setProperty('--w', hit.offsetWidth + 'px');
+    ink.classList.add('on');
+  }
+  if ('IntersectionObserver' in window) {
+    var secIO = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) setActive(e.target.id); }); }, { rootMargin: '-45% 0px -50% 0px' });
+    ['intro', 'work', 'about', 'approach', 'prices', 'contact'].forEach(function (id) { var s = document.getElementById(id); if (s) secIO.observe(s); });
+  }
+  function relayout() { if (current) setActive(current); }
+  window.addEventListener('resize', relayout);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(relayout);
+
+  // Пометки: пункт подсвечивает место на макете, номера один раз «пингуют», когда макет появляется
+  each(document.querySelectorAll('.mock .pin'), function (p) { p.style.setProperty('--n', p.textContent.trim()); });
+  if ('IntersectionObserver' in window) {
+    var stageIO = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-in'); stageIO.unobserve(e.target); } }); }, { threshold: 0.35 });
+    each(document.querySelectorAll('.stage'), function (s) { stageIO.observe(s); });
+  }
+  each(document.querySelectorAll('.case'), function (c) {
+    var pinned = null, stage = c.querySelector('.stage');
+    function show(n) {
+      each(c.querySelectorAll('.is-lit'), function (el) { el.classList.remove('is-lit'); });
+      if (n) each(c.querySelectorAll('[data-note="' + n + '"]'), function (el) { el.classList.add('is-lit'); });
+    }
+    function bringIntoView(n) {
+      // в горизонтальной ленте на телефоне доводим нужный экран до края
+      if (!stage || stage.scrollWidth <= stage.clientWidth + 2) return;
+      var t = stage.querySelector('.mock [data-note="' + n + '"]');
+      var item = t && t.closest('.stage > *');
+      if (item) stage.scrollTo({ left: item.offsetLeft - 20, behavior: reduce ? 'auto' : 'smooth' });
+    }
+    each(c.querySelectorAll('.notes li[data-note]'), function (li) {
+      var n = li.getAttribute('data-note');
+      li.addEventListener('mouseenter', function () { show(n); });
+      li.addEventListener('mouseleave', function () { show(pinned); });
+      li.addEventListener('focus', function () { show(n); });
+      li.addEventListener('blur', function () { show(pinned); });
+      li.addEventListener('click', function () { pinned = pinned === n ? null : n; show(pinned || n); bringIntoView(n); });
+      li.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); li.click(); } });
+    });
+    each(c.querySelectorAll('.mock .pin'), function (p) {
+      var n = p.textContent.trim();
+      p.addEventListener('mouseenter', function () { show(n); });
+      p.addEventListener('mouseleave', function () { show(pinned); });
+    });
+  });
+
+  // Детейлинг: до/после, переключатель кузова и пересчёт цен
+  var dt = document.getElementById('dt');
+  if (dt) {
+    var ba = dt.querySelector('.dt-ba'), range = document.getElementById('dtRange'), touched = false;
+    function setPos(v) { ba.style.setProperty('--pos', v + '%'); range.value = Math.round(v); }
+    range.addEventListener('input', function () { touched = true; setPos(+range.value); });
+    range.addEventListener('pointerdown', function () { touched = true; });
+    function hint() {
+      if (reduce || touched) return;
+      var keys = [[0, 54], [0.34, 28], [0.72, 76], [1, 54]], t0 = performance.now(), dur = 2000;
+      function ease(x) { return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2; }
+      function step(now) {
+        if (touched) return;
+        var p = Math.min(1, (now - t0) / dur), i = 1;
+        while (i < keys.length - 1 && p > keys[i][0]) i++;
+        var a = keys[i - 1], b = keys[i], q = ease((p - a[0]) / (b[0] - a[0]));
+        setPos(a[1] + (b[1] - a[1]) * q);
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+    if ('IntersectionObserver' in window) {
+      var baIO = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { baIO.disconnect(); setTimeout(hint, 400); } }); }, { threshold: 0.6 });
+      baIO.observe(ba);
+    }
+    var seg = dt.querySelector('.dt-seg'), btns = seg.querySelectorAll('button'), prices = dt.querySelectorAll('.dt-list strong'), rows = document.querySelectorAll('#fk > div');
+    function fmt(v) { return (Math.round(v / 100) * 100).toLocaleString('ru-RU').replace(/\s/g, ' ') + ' ₽'; }
+    function tween(el, to) {
+      var from = +(el.getAttribute('data-v') || el.getAttribute('data-base'));
+      el.setAttribute('data-v', to);
+      if (reduce) { el.textContent = fmt(to); return; }
+      var t0 = performance.now();
+      cancelAnimationFrame(el._raf);
+      (function step(now) {
+        var p = Math.min(1, (now - t0) / 450), e = 1 - Math.pow(1 - p, 3);
+        el.textContent = fmt(from + (to - from) * e);
+        if (p < 1) el._raf = requestAnimationFrame(step);
+      })(t0);
+    }
+    each(btns, function (b, i) {
+      b.addEventListener('click', function () {
+        each(btns, function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+        seg.style.setProperty('--i', i);
+        var k = parseFloat(b.getAttribute('data-k'));
+        each(prices, function (p) { tween(p, +p.getAttribute('data-base') * k); });
+        each(rows, function (r, j) { r.classList.toggle('on', j === i); });
+      });
+    });
+  }
+
+  // Детали на первом экране: парят, сдвигаются за мышью, их можно схватить и бросить
+  var play = document.querySelector('.play');
+  if (play) {
+    var hero = document.querySelector('.hero');
+    if (!reduce && window.matchMedia && window.matchMedia('(pointer: fine)').matches) {
+      var pr = 0, pmx = 0, pmy = 0;
+      hero.addEventListener('pointermove', function (e) {
+        var r = hero.getBoundingClientRect();
+        pmx = ((e.clientX - r.left) / r.width - 0.5) * 2; pmy = ((e.clientY - r.top) / r.height - 0.5) * 2;
+        if (!pr) pr = requestAnimationFrame(function () { pr = 0; hero.style.setProperty('--mx', pmx.toFixed(3)); hero.style.setProperty('--my', pmy.toFixed(3)); });
+      });
+      hero.addEventListener('pointerleave', function () { hero.style.setProperty('--mx', '0'); hero.style.setProperty('--my', '0'); });
+    }
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { play.classList.toggle('is-off', !es[0].isIntersecting); }).observe(play);
+    function tapSeg(f, e) {
+      var seg = f.querySelector('.fu-seg'); if (!seg) return;
+      var opts = seg.querySelectorAll('[data-i]');
+      each(opts, function (o) {
+        var r = o.getBoundingClientRect();
+        if (e.clientX >= r.left && e.clientX <= r.right) {
+          seg.style.setProperty('--i', o.getAttribute('data-i'));
+          each(opts, function (x) { x.classList.toggle('on', x === o); });
+        }
+      });
+    }
+    each(play.querySelectorAll('.frag'), function (f, k) {
+      f.style.setProperty('--k', k);
+      var ui = f.querySelector('.fu'), size = f.querySelector('.sel__size');
+      var st = { x: 0, y: 0, vx: 0, vy: 0, drag: false, moved: false, lx: 0, ly: 0, lt: 0, raf: 0 };
+      function measure() { size.textContent = ui.offsetWidth + ' × ' + ui.offsetHeight; }
+      function apply() { f.style.setProperty('--dx', st.x.toFixed(1) + 'px'); f.style.setProperty('--dy', st.y.toFixed(1) + 'px'); }
+      function lim() { return { x0: -f.offsetLeft, x1: play.clientWidth - f.offsetLeft - f.offsetWidth, y0: -f.offsetTop, y1: play.clientHeight - f.offsetTop - f.offsetHeight }; }
+      function clamp(b) { st.x = Math.min(b.x1, Math.max(b.x0, st.x)); st.y = Math.min(b.y1, Math.max(b.y0, st.y)); }
+      f.addEventListener('pointerenter', measure);
+      f.addEventListener('pointerdown', function (e) {
+        if (e.button) return;
+        e.preventDefault(); measure();
+        try { f.setPointerCapture(e.pointerId); } catch (err) {}
+        cancelAnimationFrame(st.raf);
+        st.drag = true; st.moved = false; st.vx = st.vy = 0; st.lx = e.clientX; st.ly = e.clientY; st.lt = performance.now();
+        f.classList.add('is-drag');
+      });
+      f.addEventListener('pointermove', function (e) {
+        if (!st.drag) return;
+        var now = performance.now(), dt = Math.max(8, now - st.lt), dx = e.clientX - st.lx, dy = e.clientY - st.ly;
+        if (!st.moved && Math.abs(dx) + Math.abs(dy) > 3) { st.moved = true; play.classList.add('is-used'); }
+        st.x += dx; st.y += dy; clamp(lim());
+        st.vx = Math.max(-3, Math.min(3, dx / dt)); st.vy = Math.max(-3, Math.min(3, dy / dt));
+        st.lx = e.clientX; st.ly = e.clientY; st.lt = now; apply();
+      });
+      function release(e) {
+        if (!st.drag) return;
+        st.drag = false; f.classList.remove('is-drag');
+        if (!st.moved) { tapSeg(f, e); return; }
+        if (reduce || performance.now() - st.lt > 90) return; // остановили перед тем, как отпустить
+        var last = performance.now();
+        st.raf = requestAnimationFrame(function glide(now) {
+          var dt = Math.min(32, now - last), b = lim(); last = now;
+          st.x += st.vx * dt; st.y += st.vy * dt;
+          if (st.x < b.x0 || st.x > b.x1) st.vx *= -0.45;
+          if (st.y < b.y0 || st.y > b.y1) st.vy *= -0.45;
+          clamp(b);
+          var fr = Math.pow(0.93, dt / 16); st.vx *= fr; st.vy *= fr;
+          apply();
+          if (Math.abs(st.vx) + Math.abs(st.vy) > 0.02) st.raf = requestAnimationFrame(glide);
+        });
+      }
+      f.addEventListener('pointerup', release);
+      f.addEventListener('pointercancel', release);
+      window.addEventListener('resize', function () { clamp(lim()); apply(); });
+    });
+  }
+
+  // Космос: десятки тысяч частиц на фоне собираются в фигуру каждого раздела
+  (function () {
+    var cvs = document.getElementById('space'); if (!cvs) return;
+    var gl = null;
+    function fail(e) { if (e) console.warn('space:', e.message || e); document.documentElement.classList.add('no-gl'); cvs.style.display = 'none'; }
+    try { gl = cvs.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: false, depth: false, stencil: false, preserveDrawingBuffer: true, powerPreference: 'high-performance' }); } catch (e) {}
+    if (!gl) { fail(); return; }
+
+    var VS = [
+      'precision highp float;',
+      'attribute vec3 aP0; attribute vec3 aP1; attribute vec3 aP2; attribute vec3 aP3; attribute vec3 aP4; attribute vec3 aP5; attribute vec4 aR;',
+      'uniform vec3 uFa; uniform vec3 uFb; uniform vec3 uTa; uniform vec3 uTb;',
+      'uniform vec4 uFrom; uniform vec4 uTo; uniform vec3 uFp; uniform vec3 uTp;',
+      'uniform vec3 uCa; uniform vec3 uCb; uniform vec3 uDa; uniform vec3 uDb;',
+      'uniform float uT; uniform float uWarp; uniform float uTime; uniform float uIntro;',
+      'uniform vec2 uRot; uniform vec2 uMouse; uniform float uLens; uniform float uAspect; uniform float uPx; uniform vec3 uShock;',
+      'varying vec3 vCol; varying float vA;',
+      'mat2 rot(float a){ float c = cos(a); float s = sin(a); return mat2(c, s, -s, c); }',
+      'vec3 place(vec3 p, vec4 tr, vec3 prm){',
+      '  p.z += prm.z * 0.32 * sin(p.x * 1.8 + uTime * 0.9) * cos(p.y * 1.5 + uTime * 0.55);',
+      '  p.xy = rot(prm.x * uTime) * p.xy;',
+      '  p.yz = rot(prm.y) * p.yz;',
+      '  p.xz = rot(uRot.x) * p.xz;',
+      '  p.yz = rot(uRot.y) * p.yz;',
+      '  return p * tr.w + tr.xyz;',
+      '}',
+      'void main(){',
+      '  vec3 p; float tt = 0.0;',
+      '  float it = clamp((uIntro - aR.w * 0.3) / 0.7, 0.0, 1.0); it = 1.0 - pow(1.0 - it, 3.0);',
+      '  if (aR.x < 0.0) {',
+      '    p = aP0; p.xz = rot(uRot.x * 0.35) * p.xz; p.yz = rot(uRot.y * 0.35) * p.yz;',
+      '    vCol = mix(vec3(0.72, 0.8, 1.0), vec3(1.0), aR.y);',
+      '    it = clamp(uIntro * 1.6 - aR.y * 0.6, 0.0, 1.0);',
+      '  } else {',
+      '    vec3 a = aP0 * uFa.x + aP1 * uFa.y + aP2 * uFa.z + aP3 * uFb.x + aP4 * uFb.y + aP5 * uFb.z;',
+      '    vec3 b = aP0 * uTa.x + aP1 * uTa.y + aP2 * uTa.z + aP3 * uTb.x + aP4 * uTb.y + aP5 * uTb.z;',
+      '    vec3 pa = place(a, uFrom, uFp); vec3 pb = place(b, uTo, uTp);',
+      '    tt = clamp((uT - aR.x * 0.35) / 0.65, 0.0, 1.0); tt = tt * tt * (3.0 - 2.0 * tt);',
+      '    float k = sin(3.14159 * tt);',
+      '    p = mix(pa, pb, tt);',
+      '    p += normalize(p - mix(uFrom.xyz, uTo.xyz, tt) + vec3(0.001)) * k * (0.6 + aR.y * 1.4);',
+      '    p += vec3(sin(aR.y * 40.0 + uTime), cos(aR.z * 40.0 + uTime * 1.3), sin(aR.w * 40.0 + uTime * 0.7)) * k * 0.35;',
+      '    p.z += uWarp * k * (1.5 + aR.z * 6.5);',
+      '    p = mix(uFrom.xyz + (aR.xyz - 0.5) * 0.06, p, it);',
+      '    float acc = step(0.8, aR.z);',
+      '    vCol = mix(mix(uCa, uCb, acc), mix(uDa, uDb, acc), tt);',
+      '  }',
+      '  p += 0.025 * vec3(sin(uTime * 0.7 + aR.y * 6.28), cos(uTime * 0.6 + aR.z * 6.28), sin(uTime * 0.5 + aR.w * 6.28));',
+      '  float d = 5.0 - p.z;',
+      '  if (d < 0.3) { gl_Position = vec4(2.0, 2.0, 0.0, 1.0); gl_PointSize = 0.0; vA = 0.0; return; }',
+      '  vec2 asp = vec2(uAspect, 1.0);',
+      '  vec2 ndc = vec2(p.x * 1.8 / uAspect, p.y * 1.8) / d;',
+      '  vec2 m = (ndc - uMouse) * asp; float ml = length(m);',
+      '  ndc += (m / max(ml, 0.0001)) * (1.0 - smoothstep(0.0, 0.34, ml)) * 0.09 * uLens / asp;',
+      '  float boost = 0.0; float st = uTime - uShock.z;',
+      '  if (st > 0.0 && st < 3.0) {',
+      '    vec2 s = (ndc - uShock.xy) * asp; float sl = length(s);',
+      '    float ring = 1.0 - smoothstep(0.0, 0.18, abs(sl - st * 1.3)); float amp = exp(-st * 1.3);',
+      '    ndc += (s / max(sl, 0.0001)) * ring * amp * 0.14 / asp; boost = ring * amp;',
+      '  }',
+      '  gl_Position = vec4(ndc, 0.0, 1.0);',
+      '  gl_PointSize = clamp(uPx * (0.45 + aR.w * 1.1) * (5.0 / d) * (1.0 + boost * 1.6), 0.0, 40.0);',
+      '  float tw = 0.65 + 0.35 * sin(uTime * (1.0 + aR.y * 3.0) + aR.z * 50.0);',
+      '  vCol = min(vCol + boost * 0.7, vec3(1.0));',
+      '  vA = tw * it * (0.45 + 0.55 * aR.w) * smoothstep(0.3, 1.2, d);',
+      '}'
+    ].join('\n');
+    var FS = 'precision mediump float; varying vec3 vCol; varying float vA; void main(){ vec2 c = gl_PointCoord - 0.5; float r = dot(c, c) * 4.0; if (r > 1.0) discard; float a = vA * (1.0 - r) * (1.0 - r); gl_FragColor = vec4(vCol * a, a); }';
+    var QVS = 'attribute vec2 aQ; void main(){ gl_Position = vec4(aQ, 0.0, 1.0); }';
+    var QFS = 'precision mediump float; uniform float uF; void main(){ gl_FragColor = vec4(uF); }';
+    function shader(type, src) { var s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; }
+    function program(v, f) { var p = gl.createProgram(); gl.attachShader(p, shader(gl.VERTEX_SHADER, v)); gl.attachShader(p, shader(gl.FRAGMENT_SHADER, f)); gl.linkProgram(p); if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)); return p; }
+    var P, Q;
+    try { P = program(VS, FS); Q = program(QVS, QFS); } catch (e) { fail(e); return; }
+
+    // фигуры
+    function rnd() { return Math.random(); }
+    function gauss() { var u = 1 - Math.random(), v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(6.2832 * v); }
+    function sampler(draw) {
+      var S = 360, c = document.createElement('canvas'); c.width = c.height = S;
+      var x = c.getContext('2d'); x.fillStyle = x.strokeStyle = '#fff'; draw(x, S);
+      var d = x.getImageData(0, 0, S, S).data, pts = [];
+      for (var y = 0; y < S; y += 2) for (var i = 0; i < S; i += 2) if (d[(y * S + i) * 4 + 3] > 127) pts.push((i / S - 0.5) * 3.2, -(y / S - 0.5) * 3.2);
+      return function () { var k = (Math.random() * (pts.length / 2)) | 0; return [pts[2 * k] + (Math.random() - 0.5) * 0.018, pts[2 * k + 1] + (Math.random() - 0.5) * 0.018]; };
+    }
+    function shieldPath(x, s) {
+      x.beginPath(); x.moveTo(s * .5, s * .05);
+      x.bezierCurveTo(s * .63, s * .13, s * .77, s * .16, s * .88, s * .16); x.lineTo(s * .88, s * .46);
+      x.bezierCurveTo(s * .88, s * .71, s * .69, s * .86, s * .5, s * .95);
+      x.bezierCurveTo(s * .31, s * .86, s * .12, s * .71, s * .12, s * .46); x.lineTo(s * .12, s * .16);
+      x.bezierCurveTo(s * .23, s * .16, s * .37, s * .13, s * .5, s * .05); x.closePath();
+    }
+    var shieldFill = sampler(function (x, s) {
+      shieldPath(x, s); x.fill(); x.globalCompositeOperation = 'destination-out';
+      x.lineWidth = s * .085; x.lineCap = 'round'; x.lineJoin = 'round';
+      x.beginPath(); x.moveTo(s * .33, s * .5); x.lineTo(s * .46, s * .63); x.lineTo(s * .69, s * .37); x.stroke();
+    });
+    var shieldEdge = sampler(function (x, s) { shieldPath(x, s); x.lineWidth = s * .022; x.stroke(); });
+    var atSign = sampler(function (x, s) { x.textAlign = 'center'; x.textBaseline = 'middle'; x.font = '700 ' + Math.round(s * .86) + 'px system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif'; x.fillText('@', s / 2, s * .54); });
+    function galaxy() {
+      if (rnd() < 0.18) { var r0 = Math.abs(gauss()) * 0.28, a0 = rnd() * 6.2832; return [Math.cos(a0) * r0, Math.sin(a0) * r0, gauss() * 0.09]; }
+      var arm = (rnd() * 3) | 0, r = 0.25 + Math.pow(rnd(), 0.6) * 2.9, a = arm * 2.094 + r * 2.1 + gauss() * (0.09 + r * 0.03);
+      return [Math.cos(a) * r + gauss() * 0.035 * r, Math.sin(a) * r + gauss() * 0.035 * r, gauss() * 0.045 * (3.3 - r)];
+    }
+    function shield() { var e = rnd() < 0.3, q = e ? shieldEdge() : shieldFill(); return [q[0], q[1] + 0.05, gauss() * 0.05 + (e ? 0 : 0.35 * Math.max(0, 1 - (q[0] * q[0] + q[1] * q[1]) / 2.4))]; }
+    function gear() {
+      var a = rnd() * 6.2832, R = 1.22 + (Math.cos(a * 12) > 0.2 ? 0.3 : 0), r0 = 0.5, u = rnd(), rr;
+      if (u < 0.3) rr = R - rnd() * 0.06; else if (u < 0.42) rr = r0 + rnd() * 0.06; else rr = Math.sqrt(rnd() * (R * R - r0 * r0) + r0 * r0);
+      return [Math.cos(a) * rr, Math.sin(a) * rr, gauss() * 0.09];
+    }
+    function sheet() { return [(rnd() * 2 - 1) * 3.6, ((Math.floor(rnd() * 26) / 25) * 2 - 1) * 1.9 + gauss() * 0.006, 0]; }
+    function steps() {
+      var cx = [-2.55, -0.85, 0.85, 2.55];
+      if (rnd() < 0.25) { var u = rnd() * 5.1 - 2.55; return [u, 0.22 * Math.sin(u * 1.2), gauss() * 0.02]; }
+      var k = (rnd() * 4) | 0, a = rnd() * 6.2832, r = 0.5 + gauss() * 0.025;
+      return [cx[k] + Math.cos(a) * r, 0.22 * Math.sin(cx[k] * 1.2) + Math.sin(a) * r, Math.sin(a) * 0.12];
+    }
+    function at() { var q = atSign(); return [q[0], q[1], gauss() * 0.06]; }
+
+    var N = Math.round(Math.min(32000, Math.max(9000, innerWidth * innerHeight / 40))), F = 22, data = new Float32Array(N * F);
+    for (var n = 0; n < N; n++) {
+      var o = n * F, list, star = rnd() < 0.16;
+      if (star) { var sp = [gauss() * 5.5, gauss() * 3.4, -1.5 - rnd() * 7]; list = [sp, sp, sp, sp, sp, sp]; }
+      else list = [galaxy(), shield(), gear(), sheet(), steps(), at()];
+      for (var s = 0; s < 6; s++) { data[o + s * 3] = list[s][0]; data[o + s * 3 + 1] = list[s][1]; data[o + s * 3 + 2] = list[s][2]; }
+      data[o + 18] = star ? -1 : rnd(); data[o + 19] = rnd(); data[o + 20] = rnd(); data[o + 21] = rnd();
+    }
+    var buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+    var quad = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, quad); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    var locP = ['aP0', 'aP1', 'aP2', 'aP3', 'aP4', 'aP5'].map(function (k) { return gl.getAttribLocation(P, k); });
+    var locR = gl.getAttribLocation(P, 'aR'), locQ = gl.getAttribLocation(Q, 'aQ'), uF = gl.getUniformLocation(Q, 'uF'), U = {};
+    ['uFa', 'uFb', 'uTa', 'uTb', 'uFrom', 'uTo', 'uFp', 'uTp', 'uCa', 'uCb', 'uDa', 'uDb', 'uT', 'uWarp', 'uTime', 'uIntro', 'uRot', 'uMouse', 'uLens', 'uAspect', 'uPx', 'uShock'].forEach(function (k) { U[k] = gl.getUniformLocation(P, k); });
+    var maxAttr = gl.getParameter(gl.MAX_VERTEX_ATTRIBS);
+    function off() { for (var i = 0; i < maxAttr; i++) gl.disableVertexAttribArray(i); }
+
+    // сцены: галактика, щит STEOVPN, шестерёнка автосервиса, волна детейлинга, четыре шага, «@»
+    var SC, dpr = 1, aspect = 1, A = [];
+    function scenes() {
+      var m = innerWidth < 760;
+      return [
+        { off: m ? [0, 0.35, 0] : [1.45, 0.2, 0], s: m ? 0.62 : 1.0, p: [0.05, 0.95, 0], c0: [0.78, 0.86, 1.0], c1: [1.0, 0.31, 0.63] },
+        { off: [0, 0.05, 0], s: m ? 0.9 : 1.75, p: [0, 0, 0], c0: [0.95, 0.77, 0.41], c1: [1.0, 0.96, 0.86] },
+        { off: [0, 0, 0], s: m ? 0.8 : 1.75, p: [0.22, 0, 0], c0: [1.0, 0.36, 0.1], c1: [1.0, 0.85, 0.75] },
+        { off: [0, -0.35, 0], s: m ? 0.62 : 1.0, p: [0, 1.05, 1], c0: [0.93, 0.91, 0.87], c1: [0.55, 0.8, 1.0] },
+        { off: m ? [0, 0.9, 0] : [-1.3, 1.0, 0], s: m ? 0.48 : 0.75, p: [0, 0.3, 0], c0: [1.0, 0.31, 0.63], c1: [0.9, 0.93, 1.0] },
+        { off: m ? [0, 0.75, 0] : [1.75, -0.1, 0], s: m ? 0.6 : 1.1, p: [0, 0, 0], c0: [1.0, 0.31, 0.63], c1: [1.0, 1.0, 1.0] }
+      ];
+    }
+    var anchors = [document.getElementById('intro')].concat(Array.prototype.slice.call(document.querySelectorAll('.case')), [document.getElementById('approach'), document.getElementById('contact')]);
+    function measure() { A = anchors.map(function (el) { var r = el.getBoundingClientRect(); return r.top + window.scrollY + r.height / 2; }); }
+    function targetG() {
+      var c = window.scrollY + innerHeight / 2;
+      if (c <= A[0]) return 0;
+      for (var i = 0; i < A.length - 1; i++) if (c < A[i + 1]) { var t = (c - A[i]) / (A[i + 1] - A[i]); return i + Math.min(1, Math.max(0, (t - 0.3) / 0.5)); }
+      return A.length - 1;
+    }
+    function hot(k) { var h = [0, 0, 0, 0, 0, 0]; h[k] = 1; return h; }
+
+    var start = performance.now(), last = start, time = 0, Gs = -1, Gp = 0, intro = reduce ? 1 : 0;
+    var tmx = 0, tmy = 0, mx = 0, my = 0, shock = [0, 0, -99];
+    var fine = window.matchMedia && window.matchMedia('(pointer: fine)').matches, drawN = N, slow = 0, frames = 0;
+    function draw(i, t, speed) {
+      var fade = reduce ? 1 : (intro < 1 ? 0.05 : Math.max(0.05, 0.3 - Math.min(0.25, speed * 0.9)));
+      if (!reduce && time - shock[2] < 1.5) fade = Math.min(fade, 0.12);
+      gl.enable(gl.BLEND);
+      gl.useProgram(Q); off();
+      gl.bindBuffer(gl.ARRAY_BUFFER, quad); gl.enableVertexAttribArray(locQ); gl.vertexAttribPointer(locQ, 2, gl.FLOAT, false, 0, 0);
+      gl.blendEquation(gl.FUNC_REVERSE_SUBTRACT); gl.blendFunc(gl.ONE, gl.ONE);
+      gl.uniform1f(uF, fade); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      gl.useProgram(P); off(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      locP.forEach(function (loc, s) { if (loc < 0) return; gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 3, gl.FLOAT, false, F * 4, s * 12); });
+      if (locR >= 0) { gl.enableVertexAttribArray(locR); gl.vertexAttribPointer(locR, 4, gl.FLOAT, false, F * 4, 72); }
+      gl.blendEquation(gl.FUNC_ADD); gl.blendFunc(gl.ONE, gl.ONE);
+      var a = SC[i], b = SC[i + 1], fa = hot(i), ta = hot(i + 1);
+      gl.uniform3f(U.uFa, fa[0], fa[1], fa[2]); gl.uniform3f(U.uFb, fa[3], fa[4], fa[5]);
+      gl.uniform3f(U.uTa, ta[0], ta[1], ta[2]); gl.uniform3f(U.uTb, ta[3], ta[4], ta[5]);
+      gl.uniform4f(U.uFrom, a.off[0], a.off[1], a.off[2], a.s); gl.uniform4f(U.uTo, b.off[0], b.off[1], b.off[2], b.s);
+      gl.uniform3fv(U.uFp, a.p); gl.uniform3fv(U.uTp, b.p);
+      gl.uniform3fv(U.uCa, a.c0); gl.uniform3fv(U.uCb, a.c1); gl.uniform3fv(U.uDa, b.c0); gl.uniform3fv(U.uDb, b.c1);
+      gl.uniform1f(U.uT, t); gl.uniform1f(U.uWarp, i === 0 ? 1 : 0.3); gl.uniform1f(U.uTime, time); gl.uniform1f(U.uIntro, intro);
+      gl.uniform2f(U.uRot, 0.32 * Math.sin(time * 0.13) + mx * 0.35, 0.12 * Math.sin(time * 0.1) - my * 0.2);
+      gl.uniform2f(U.uMouse, mx, my); gl.uniform1f(U.uLens, fine && !reduce ? 1 : 0);
+      gl.uniform1f(U.uAspect, aspect); gl.uniform1f(U.uPx, 2.1 * dpr);
+      gl.uniform3f(U.uShock, shock[0], shock[1], shock[2]);
+      gl.drawArrays(gl.POINTS, 0, drawN);
+    }
+    function frame(now) {
+      var dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now; time = (now - start) / 1000;
+      if (frames < 120) { frames++; if (dt > 0.03) slow++; if (frames === 120 && slow > 50) drawN = Math.round(N * 0.5); }
+      var G = targetG(); if (Gs < 0 || reduce) Gs = G;
+      Gs += (G - Gs) * (1 - Math.exp(-dt * 3.2));
+      var speed = Math.abs(Gs - Gp) / Math.max(dt, 0.001); Gp = Gs;
+      intro = Math.min(1, intro + dt / 2.6);
+      mx += (tmx - mx) * (1 - Math.exp(-dt * 4)); my += (tmy - my) * (1 - Math.exp(-dt * 4));
+      var i = Math.min(SC.length - 2, Math.floor(Gs)), t = Math.min(1, Math.max(0, Gs - i));
+      draw(i, t, speed);
+      if (!reduce) requestAnimationFrame(frame);
+    }
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, innerWidth < 760 ? 1.5 : 1.75);
+      cvs.width = Math.max(1, Math.round(innerWidth * dpr)); cvs.height = Math.max(1, Math.round(innerHeight * dpr));
+      gl.viewport(0, 0, cvs.width, cvs.height); aspect = innerWidth / Math.max(1, innerHeight);
+      SC = scenes(); measure();
+      if (reduce) frame(performance.now());
+    }
+    window.addEventListener('resize', resize); resize();
+    window.addEventListener('load', measure);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+    if (reduce) window.addEventListener('scroll', function () { frame(performance.now()); }, { passive: true });
+    else requestAnimationFrame(frame);
+    cvs.addEventListener('webglcontextlost', function (e) { e.preventDefault(); fail(); });
+
+    window.addEventListener('pointermove', function (e) { if (e.pointerType !== 'mouse') return; tmx = e.clientX / innerWidth * 2 - 1; tmy = 1 - e.clientY / innerHeight * 2; }, { passive: true });
+    document.addEventListener('pointerdown', function (e) {
+      var tg = e.target;
+      if (tg && tg.closest && tg.closest('a,button,input,label,.frag,.notes li,.mock,.tile,[role="group"],.nav,.copy')) return;
+      shock = [e.clientX / innerWidth * 2 - 1, 1 - e.clientY / innerHeight * 2, time];
+    }, { passive: true });
+    mailAddr.addEventListener('pointerenter', function () { var r = mailAddr.getBoundingClientRect(); shock = [(r.left + r.width / 2) / innerWidth * 2 - 1, 1 - (r.top + r.height / 2) / innerHeight * 2, time]; });
+  })();
+
+  // Сетка: 12 колонок на компьютере, 4 на телефоне
+  var gridBtn = document.getElementById('gridToggle'), overlay = document.getElementById('overlay');
+  gridBtn.addEventListener('click', function () {
+    var on = overlay.hidden;
+    overlay.hidden = !on;
+    gridBtn.setAttribute('aria-pressed', String(on));
+    gridBtn.textContent = on ? 'Скрыть сетку' : 'Показать сетку';
+  });
+
+  // Персональная ссылка из рассылки: ?to=Компания&n=auto|detailing|salon
+  var GUEST = { to: '', n: '' };
+  try {
+    var q = new URLSearchParams(location.search);
+    GUEST.to = (q.get('to') || '').replace(/[^\p{L}\p{N} \-.,«»"'&+№!]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 40);
+    GUEST.n = ['auto', 'detailing', 'salon'].indexOf(q.get('n')) >= 0 ? q.get('n') : '';
+  } catch (e) { /* old browser: no greeting */ }
+  var NICHE = {
+    auto: { id: 'c2', what: 'автосервисов', name: '«Ключ на 10»' },
+    detailing: { id: 'c3', what: 'студий детейлинга', name: '«Слой»' },
+    salon: { id: 'c4', what: 'салонов красоты', name: '«Миндаль»' }
+  };
+  if (GUEST.to || GUEST.n) {
+    var ni = NICHE[GUEST.n];
+    document.getElementById('helloName').textContent = GUEST.to ? GUEST.to + ', здравствуйте!' : 'Здравствуйте!';
+    document.getElementById('helloText').textContent = ni
+      ? 'Я Пётр, делаю сайты для ' + ni.what + '. Начните с концепта ' + ni.name + ': я поставил его первым в списке работ.'
+      : 'Я Пётр, делаю сайты для локального бизнеса. Ниже работы, цены и как со мной связаться.';
+    var go = document.getElementById('helloGo');
+    if (ni) {
+      var art = document.getElementById(ni.id).closest('article'), first = document.querySelector('#work article.case');
+      if (art && first && art !== first) first.parentNode.insertBefore(art, first);
+      go.href = '#' + ni.id;
+    } else go.textContent = 'Смотреть работы';
+    document.getElementById('hello').hidden = false;
+  }
+  // игра получает те же параметры: гостя, нишу и сезон (?season=winter — зима в любой месяц)
+  var gp = [];
+  if (GUEST.to) gp.push('to=' + encodeURIComponent(GUEST.to));
+  if (GUEST.n) gp.push('n=' + GUEST.n);
+  try { var season = new URLSearchParams(location.search).get('season'); if (season === 'winter' || season === 'autumn') gp.push('season=' + season); } catch (e) { /* old browser */ }
+  if (gp.length) each(document.querySelectorAll('a[href="game.html"]'), function (a) { a.href = 'game.html?' + gp.join('&'); });
+
+  // «Обсудить сайт»: короткая анкета, которая собирает сообщение в Telegram
+  each(document.querySelectorAll('[data-brief]'), function (b) {
+    b.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (!window.PetrBrief) return;
+      var need = b.getAttribute('data-need'), o = { source: 'page' };
+      if (need) o.need = [need];
+      if (GUEST.n) o.biz = GUEST.n;
+      if (GUEST.to) o.name = GUEST.to;
+      window.PetrBrief.open(o);
+    });
+  });
+  // плавающая кнопка на телефоне: после первого экрана и не поверх контактов
+  var fab = document.getElementById('fab');
+  if (fab && 'IntersectionObserver' in window) {
+    var seen = { intro: true, contact: false };
+    var fabIO = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { seen[e.target.id] = e.isIntersecting; });
+      fab.classList.toggle('on', !seen.intro && !seen.contact);
+    }, { threshold: 0.05 });
+    ['intro', 'contact'].forEach(function (id) { var el = document.getElementById(id); if (el) fabIO.observe(el); });
+  }
+
+  // Салон: вкладки услуг меняют прайс, свободное время можно выбрать
+  var sl = document.getElementById('sl');
+  if (sl) {
+    var MENU = [
+      [['Маникюр с покрытием', '1 ч 30 мин', '2 200 ₽'], ['Снятие и маникюр', '1 ч 45 мин', '2 500 ₽'], ['Педикюр с покрытием', '2 ч', '3 000 ₽']],
+      [['Коррекция и окрашивание', '45 мин', '1 400 ₽'], ['Ламинирование бровей', '1 ч', '2 300 ₽'], ['Брови и ресницы', '1 ч 30 мин', '3 200 ₽']],
+      [['Женская стрижка', '1 ч', '2 000 ₽'], ['Окрашивание в один тон', '2 ч 30 мин', 'от 4 500 ₽'], ['Укладка', '45 мин', '1 500 ₽']]
+    ];
+    var tabs = sl.querySelectorAll('.sl-tabs button'), list = sl.querySelector('.sl-list'), thumb = sl.querySelector('.sl-thumb'), swapT;
+    each(tabs, function (b, i) {
+      b.addEventListener('click', function () {
+        each(tabs, function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+        thumb.style.setProperty('--i', i);
+        list.classList.add('is-swap');
+        clearTimeout(swapT);
+        swapT = setTimeout(function () {
+          list.innerHTML = '';
+          MENU[i].forEach(function (r) {
+            var li = document.createElement('li'), sp = document.createElement('span'), bb = document.createElement('b'), em = document.createElement('em'), st = document.createElement('strong');
+            bb.textContent = r[0]; em.textContent = r[1]; st.textContent = r[2].replace(' ₽', ' ₽').replace(/(\d) (\d)/, '$1 $2');
+            sp.appendChild(bb); sp.appendChild(em); li.appendChild(sp); li.appendChild(st); list.appendChild(li);
+          });
+          requestAnimationFrame(function () { list.classList.remove('is-swap'); });
+        }, reduce ? 0 : 220);
+      });
+    });
+    var slots = sl.querySelectorAll('.sl-slots button');
+    each(slots, function (b) { b.addEventListener('click', function () { each(slots, function (x) { x.classList.toggle('on', x === b); }); }); });
+  }
+})();
+</script>
